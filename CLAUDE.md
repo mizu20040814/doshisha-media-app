@@ -103,6 +103,43 @@ npm run type-check   # TypeScript型チェック実行
    - 24時間の有効期限
    - セキュアなクッキー設定
 
+## 実装済み機能（2025-09-03時点）
+
+### ✅ 完了済み
+1. **データベース基盤**
+   - Supabaseプロジェクト接続
+   - postsテーブル作成（UUID、カテゴリ、ステータス管理）
+   - 開発用RLS設定
+
+2. **認証システム**
+   - NextAuth.js導入・設定完了
+   - 管理者ログイン機能（`/admin/login`）
+   - ミドルウェアによるルート保護
+   - セッション管理（JWT、24時間）
+
+3. **ファイル構成**
+   ```
+   app/
+   ├── api/
+   │   ├── auth/[...nextauth]/route.ts  # 認証API
+   │   └── test-db/route.ts             # DB接続テスト
+   ├── admin/
+   │   └── login/page.tsx               # ログインページ
+   lib/
+   ├── supabase.ts                      # DBクライアント
+   └── auth.ts                          # 認証ヘルパー
+   types/
+   ├── database.ts                      # DB型定義
+   └── next-auth.d.ts                   # NextAuth型拡張
+   middleware.ts                        # ルート保護
+   ```
+
+### 🚧 次の実装予定
+1. 管理者ダッシュボード（`/admin/page.tsx`）
+2. 記事CRUD機能
+3. パブリックページ（記事一覧・詳細）
+4. Markdownエディタ統合
+
 ## 重要な注意事項
 
 - 管理者中心でユーザー登録システムなし
@@ -110,3 +147,4 @@ npm run type-check   # TypeScript型チェック実行
 - モバイル学生向けレスポンシブデザイン重視
 - コンテンツ発見のためSEO最適化が重要
 - 将来拡張予定: 画像アップロード、アンケート、コメント、いいね機能
+- **開発環境ではRLS無効化中** - 本番前に必ず有効化すること
