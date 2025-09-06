@@ -1,0 +1,208 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { supabase } from "@/lib/supabase";
+import { Post } from "@/types/database";
+
+export async function GET(
+    req: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        if (!session) {
+            return NextResponse.json(
+                { error: "認証が必要です" },
+                { status: 401 }
+            );
+        }
+
+        if (!params.id) {
+            return NextResponse.json(
+                { error: "記事IDが必要です" },
+                { status: 400 }
+            );
+        }
+
+        const { data: post, error } = await supabase
+            .from("posts")
+            .select("*")
+            .eq("id", params.id)
+            .single();
+
+        if (error) {
+            if (error.code === "PGRST116") {
+                return NextResponse.json(
+                    { error: "記事が見つかりません" },
+                    { status: 404 }
+                );
+            }
+            console.error("Supabase Error:", error);
+            return NextResponse.json(
+                { error: "記事の取得に失敗しました" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(post);
+    } catch (error) {
+        console.error("Unexpected error in GET /api/posts/[id]:", error);
+        return NextResponse.json(
+            { error: "サーバーエラーが発生しました" },
+            { status: 500 }
+        );
+    }
+}
+
+export async function PUT(
+    req: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const session = await getServerSession(authOptions);
+
+        if (!session) {
+            return NextResponse.json(
+                { error: "認証が必要です" },
+                { status: 401 }
+            );
+        }
+
+        if (!params.id) {
+            return NextResponse.json(
+                { error: "記事IDが必要です" },
+                { status: 400 }
+            );
+        }
+
+        let body;
+        try {
+            body = await req.json();
+        } catch (parseError) {
+            return NextResponse.json(
+                { error: "不正なJSONフォーマットです" },
+                { status: 400 }
+            );
+        }
+
+        // バリデーション
+        const { title, content, category, status } = body;
+
+        if (!title || !content || !category) {
+            return NextResponse.json(
+                { error: "タイトル、内容、カテゴリは必須です" },
+                { status: 400 }
+            );
+        }
+
+        const updateData: any = {
+            title,
+            content,
+            category,
+            status: status || "draft",
+            updated_at: new Date().toISOString(),
+        };
+        if (status === "published") {
+            const { data: currentPost } = await supabase
+                .from("posts")
+                .select("status, published_at")
+                .eq("id", params.id)
+                .single();
+            if (currentPost?.status !== "published") {
+                updateData.published_at = new Date().toISOString();
+            }
+        } else if (status === "draft") {
+            updateData.published_at = null;
+        }
+
+        // データ更新
+        const { data: data, error } = await supabase
+            .from("posts")
+            .update(updateData)
+            .eq("id", params.id)
+            .select()
+            .single();
+
+        if (error) {
+            if (error.code === "PGRST116") {
+                return NextResponse.json(
+                    { error: "更新対象の記事が見つかりません" },
+                    { status: 404 }
+                );
+            }
+            console.error("Update Error:", error);
+            return NextResponse.json(
+                { error: "記事の更新に失敗しました" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(data);
+    } catch (error) {
+        console.error("Unexpected error in PUT /api/posts/[id]:", error);
+        return NextResponse.json(
+            { error: "サーバーエラーが発生しました" },
+            { status: 500 }
+        );
+    }
+}
+
+export async function DELETE(
+    req: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session) {
+            return NextResponse.json(
+                { error: "認証が必要です" },
+                { status: 401 }
+            );
+        }
+
+        if (!params.id) {
+            return NextResponse.json(
+                { error: "記事IDが必要です" },
+                { status: 400 }
+            );
+        }
+
+        const { data: existingPost } = await supabase
+            .from("posts")
+            .select("id")
+            .eq("id", params.id)
+            .single();
+
+        if (!existingPost) {
+            return NextResponse.json(
+                { error: "削除対象の記事が見つかりません" },
+                { status: 404 }
+            );
+        }
+
+        const { error } = await supabase
+            .from("posts")
+            .delete()
+            .eq("id", params.id);
+
+        if (error) {
+            console.error("Delete Error:", error);
+            return NextResponse.json(
+                { error: "記事の削除に失敗しました" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: "記事を削除しました" },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error("Unexpected error in DELETE /api/posts/[id]:", error);
+        return NextResponse.json(
+            { error: "サーバーエラーが発生しました" },
+            { status: 500 }
+        );
+    }
+}
