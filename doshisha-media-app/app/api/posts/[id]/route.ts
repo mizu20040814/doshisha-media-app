@@ -6,7 +6,7 @@ import { Post } from "@/types/database";
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -18,7 +18,9 @@ export async function GET(
             );
         }
 
-        if (!params.id) {
+        const { id } = await params;
+
+        if (!id) {
             return NextResponse.json(
                 { error: "記事IDが必要です" },
                 { status: 400 }
@@ -28,7 +30,7 @@ export async function GET(
         const { data: post, error } = await supabase
             .from("posts")
             .select("*")
-            .eq("id", params.id)
+            .eq("id", id)
             .single();
 
         if (error) {
@@ -57,7 +59,7 @@ export async function GET(
 
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -69,7 +71,9 @@ export async function PUT(
             );
         }
 
-        if (!params.id) {
+        const { id } = await params;
+
+        if (!id) {
             return NextResponse.json(
                 { error: "記事IDが必要です" },
                 { status: 400 }
@@ -107,7 +111,7 @@ export async function PUT(
             const { data: currentPost } = await supabase
                 .from("posts")
                 .select("status, published_at")
-                .eq("id", params.id)
+                .eq("id", id)
                 .single();
             if (currentPost?.status !== "published") {
                 updateData.published_at = new Date().toISOString();
@@ -120,7 +124,7 @@ export async function PUT(
         const { data: data, error } = await supabase
             .from("posts")
             .update(updateData)
-            .eq("id", params.id)
+            .eq("id", id)
             .select()
             .single();
 
@@ -150,7 +154,7 @@ export async function PUT(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -161,7 +165,9 @@ export async function DELETE(
             );
         }
 
-        if (!params.id) {
+        const { id } = await params;
+
+        if (!id) {
             return NextResponse.json(
                 { error: "記事IDが必要です" },
                 { status: 400 }
@@ -171,7 +177,7 @@ export async function DELETE(
         const { data: existingPost } = await supabase
             .from("posts")
             .select("id")
-            .eq("id", params.id)
+            .eq("id", id)
             .single();
 
         if (!existingPost) {
@@ -184,7 +190,7 @@ export async function DELETE(
         const { error } = await supabase
             .from("posts")
             .delete()
-            .eq("id", params.id);
+            .eq("id", id);
 
         if (error) {
             console.error("Delete Error:", error);
