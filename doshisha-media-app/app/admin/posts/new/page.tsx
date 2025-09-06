@@ -146,7 +146,7 @@ export default function NewPostPage() {
                                 value="draft"
                                 checked={status === "draft"}
                                 onChange={(e) =>
-                                    setStatus(e.target.value as "draft")
+                                    setStatus(e.target.value as "draft" | "published")
                                 }
                                 className="mr-2 text-indigo-600 focus:ring-indigo-500"
                             />
@@ -158,7 +158,7 @@ export default function NewPostPage() {
                                 value="published"
                                 checked={status === "published"}
                                 onChange={(e) =>
-                                    setStatus(e.target.value as "published")
+                                    setStatus(e.target.value as "draft" | "published")
                                 }
                                 className="mr-2 text-indigo-600 focus:ring-indigo-500"
                             />
