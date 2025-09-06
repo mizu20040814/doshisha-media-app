@@ -72,133 +72,118 @@ export default function NewPostPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-4xl mx-auto px-4 py-8">
-                {/* Header part */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
-                        記事編集
-                    </h1>
-                    <Link
-                        href="/admin"
-                        className="text-blue-600 hover:text-blue-800"
-                    >
-                        ← ダッシュボードに戻る
-                    </Link>
+    <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* Header part */}
+            <div className="mb-8">
+                <h1 className="text-3xl font-bold text-gray-900">新規記事作成</h1>
+                <Link href="/admin" className="text-blue-600 hover:text-blue-800">← ダッシュボードに戻る</Link>
+            </div>
+            {/* Error message */}
+            {error && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-md mb-4">
+                    {error}
                 </div>
-                {/* Error message */}
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-4 rounded-md mb-4">
-                        {error}
-                    </div>
-                )}
-                {/* Form part */}
-                <form
-                    onSubmit={handleSubmit}
-                    className="bg-white rounded-lg shadow p-6"
-                >
-                    {/* Title */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            タイトル <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500focus:border-indigo-500"
-                            placeholder="記事のタイトルを入力"
+            )}
+            {/* Form part */}
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white rounded-lg shadow p-6"
+            >
+                {/* Title */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        タイトル <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="記事のタイトルを入力"
+                    />
+                </div>
+                {/* Category */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        カテゴリ <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value as any)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
+                    >
+                        <option value="news">ニュース</option>
+                        <option value="column">コラム</option>
+                        <option value="interview">インタビュー</option>
+                        <option value="survey">アンケート企画</option>
+                    </select>
+                </div>
+                {/* Markdown Editor */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        内容 <span className="text-red-500">*</span>
+                    </label>
+                    <div data-color-mode="light">
+                        <MDEditor
+                            value={content}
+                            onChange={(value) => setContent(value || "")}
+                            preview="live"
+                            height={400}
+                            data-color-mode="light"
                         />
                     </div>
-                    {/* Category */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            カテゴリ <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value as any)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
-                        >
-                            <option value="news">ニュース</option>
-                            <option value="column">コラム</option>
-                            <option value="interview">インタビュー</option>
-                            <option value="survey">アンケート企画</option>
-                        </select>
-                    </div>
-                    {/* Markdown Editor */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            内容 <span className="text-red-500">*</span>
-                        </label>
-                        <div data-color-mode="light">
-                            <MDEditor
-                                value={content}
-                                onChange={(value) => setContent(value || "")}
-                                preview="live"
-                                height={400}
-                                data-color-mode="light"
-                            />
-                        </div>
-                    </div>
-                    {/* Status */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            ステータス
-                        </label>
-                        <div className="flex gap-4">
-                            <label className="flex items-center text-gray-700">
-                                <input
-                                    type="radio"
-                                    value="draft"
-                                    checked={status === "draft"}
-                                    onChange={(e) =>
-                                        setStatus(
-                                            e.target.value as
-                                                | "draft"
-                                                | "published"
-                                        )
-                                    }
-                                    className="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                />
-                                下書き
-                            </label>
-                            <label className="flex items-center text-gray-700">
-                                <input
-                                    type="radio"
-                                    value="published"
-                                    checked={status === "published"}
-                                    onChange={(e) =>
-                                        setStatus(
-                                            e.target.value as
-                                                | "draft"
-                                                | "published"
-                                        )
-                                    }
-                                    className="mr-2 text-indigo-600 focus:ring-indigo-500"
-                                />
-                                公開
-                            </label>
-                        </div>
-                    </div>
-                    {/* Submit Button */}
+                </div>
+                {/* Status */}
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        ステータス
+                    </label>
                     <div className="flex gap-4">
-                        <button
-                            type="submit"
-                            disabled={saving}
-                            className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                        >
-                            {saving ? "更新中..." : "更新"}
-                        </button>
-                        <Link
-                            href="/admin"
-                            className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
-                        >
-                            キャンセル
-                        </Link>
+                        <label className="flex items-center text-gray-700">
+                            <input
+                                type="radio"
+                                value="draft"
+                                checked={status === "draft"}
+                                onChange={(e) =>
+                                    setStatus(e.target.value as "draft" | "published")
+                                }
+                                className="mr-2 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            下書き
+                        </label>
+                        <label className="flex items-center text-gray-700">
+                            <input
+                                type="radio"
+                                value="published"
+                                checked={status === "published"}
+                                onChange={(e) =>
+                                    setStatus(e.target.value as "draft" | "published")
+                                }
+                                className="mr-2 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            公開
+                        </label>
                     </div>
-                </form>
-            </div>
+                </div>
+                {/* Submit Button */}
+                <div className="flex gap-4">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                    >
+                        {loading ? "保存中..." : "保存"}
+                    </button>
+                    <Link
+                        href="/admin"
+                        className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                    >
+                        キャンセル
+                    </Link>
+                </div>
+            </form>
         </div>
+    </div>
     );
 }
