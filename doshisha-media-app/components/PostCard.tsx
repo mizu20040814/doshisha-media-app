@@ -19,7 +19,7 @@ export default function PostCard({
 
     return (
         <Link href={`/posts/${id}`} className="block">
-            <article className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer">
+            <article className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer">
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                         <span
@@ -34,7 +34,7 @@ export default function PostCard({
                         </time>
                     </div>
 
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-indigo-600">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-doshisha-purple-400">
                         {title}
                     </h3>
 
@@ -42,7 +42,7 @@ export default function PostCard({
                         {preview}
                     </p>
 
-                    <div className="inline-flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                    <div className="inline-flex items-center text-doshisha-purple-600 hover:text-doshisha-purple-400 text-sm font-medium">
                         続きを読む
                         <svg
                             className="w-4 h-4 ml-1"

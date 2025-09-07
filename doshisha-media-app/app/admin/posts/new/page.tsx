@@ -73,7 +73,7 @@ export default function NewPostPage() {
     };
 
     return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
         <div className="max-w-4xl mx-auto px-4 py-8">
             {/* Header part */}
             <div className="mb-8">
@@ -100,7 +100,7 @@ export default function NewPostPage() {
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-doshisha-purple-400 focus:border-doshisha-purple-400"
                         placeholder="記事のタイトルを入力"
                     />
                 </div>
@@ -112,7 +112,7 @@ export default function NewPostPage() {
                     <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value as Category)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-doshisha-purple-400 focus:border-doshisha-purple-400"
                     >
                         <option value="news">ニュース</option>
                         <option value="column">コラム</option>
@@ -149,7 +149,7 @@ export default function NewPostPage() {
                                 onChange={(e) =>
                                     setStatus(e.target.value as "draft" | "published")
                                 }
-                                className="mr-2 text-indigo-600 focus:ring-indigo-500"
+                                className="mr-2 text-doshisha-purple-600 focus:ring-doshisha-purple-400"
                             />
                             下書き
                         </label>
@@ -161,7 +161,7 @@ export default function NewPostPage() {
                                 onChange={(e) =>
                                     setStatus(e.target.value as "draft" | "published")
                                 }
-                                className="mr-2 text-indigo-600 focus:ring-indigo-500"
+                                className="mr-2 text-doshisha-purple-600 focus:ring-doshisha-purple-400"
                             />
                             公開
                         </label>
@@ -172,7 +172,7 @@ export default function NewPostPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                        className="px-6 py-2 bg-doshisha-purple-600 text-white rounded-md hover:bg-doshisha-purple-500 disabled:opacity-50"
                     >
                         {loading ? "保存中..." : "保存"}
                     </button>

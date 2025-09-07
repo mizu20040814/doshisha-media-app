@@ -31,26 +31,12 @@ export default function Header() {
                     <div className="flex items-center">
                         <Link
                             href="/"
-                            className="text-2xl font-bold text-indigo-600"
+                            className="text-2xl font-bold text-doshisha-purple-600"
                         >
                             同志社メディア
                         </Link>
                     </div>
 
-                    <nav className="hidden md:flex space-x-8">
-                        <Link
-                            href="/"
-                            className="text-gray-700 hover:text-indigo-600"
-                        >
-                            ホーム
-                        </Link>
-                        <Link
-                            href="/about"
-                            className="text-gray-700 hover:text-indigo-600"
-                        >
-                            概要
-                        </Link>
-                    </nav>
                 </div>
 
                 {/* カテゴリナビゲーション */}
@@ -68,8 +54,8 @@ export default function Header() {
                                     }
                                     className={`whitespace-nowrap text-sm font-medium pb-2 border-b-2 transition-colors ${
                                         isActive
-                                            ? "text-indigo-600 border-indigo-600"
-                                            : "text-gray-500 border-transparent hover:text-indigo-600 hover:border-indigo-600"
+                                            ? "text-doshisha-purple-600 border-doshisha-purple-600"
+                                            : "text-gray-500 border-transparent hover:text-doshisha-purple-400 hover:border-doshisha-purple-400"
                                     }`}
                                 >
                                     {category.label}

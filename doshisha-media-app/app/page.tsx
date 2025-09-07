@@ -59,7 +59,7 @@ export default async function HomePage() {
     const posts = await getPublishedPosts();
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-white">
             <Header />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -79,7 +79,7 @@ export default async function HomePage() {
                             {[...Array(6)].map((_, i) => (
                                 <div
                                     key={i}
-                                    className="bg-white rounded-lg shadow-sm border border-gray-200 animate-pulse"
+                                    className="bg-white shadow-sm border border-gray-200 animate-pulse"
                                 >
                                     <div className="p-6">
                                         <div className="h-4 bg-gray-200 rounded w-20 mb-3"></div>
