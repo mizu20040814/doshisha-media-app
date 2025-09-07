@@ -8,8 +8,20 @@
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+    --font-sans: var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif;
+    --font-mono: 'Consolas', 'Monaco', monospace;
+    
+    /* 同志社カラーパレット */
+    --color-doshisha-purple-50: #f5f3ff;
+    --color-doshisha-purple-100: #ede9fe;
+    --color-doshisha-purple-200: #ddd6fe;
+    --color-doshisha-purple-300: #c4b5fd;
+    --color-doshisha-purple-400: #a78bfa;
+    --color-doshisha-purple-500: #8b5cf6;
+    --color-doshisha-purple-600: #660066; /* メインの同志社カラー */
+    --color-doshisha-purple-700: #5a0052;
+    --color-doshisha-purple-800: #4f0044;
+    --color-doshisha-purple-900: #440038;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +34,7 @@
 body {
     background: var(--background);
     color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-noto-sans-jp), 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* line-clamp utilities for text truncation */
@@ -78,11 +90,12 @@ body {
 }
 
 .markdown-content blockquote {
-    @apply border-l-4 border-indigo-500 pl-4 italic text-gray-600 my-6;
+    @apply border-l-4 border-doshisha-purple-500 pl-4 italic text-gray-600 my-6;
 }
 
 .markdown-content code {
-    @apply bg-gray-100 px-2 py-1 rounded text-sm font-mono;
+    @apply bg-gray-100 px-2 py-1 rounded text-sm;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
 }
 
 .markdown-content pre {
@@ -94,7 +107,7 @@ body {
 }
 
 .markdown-content a {
-    @apply text-indigo-600 hover:text-indigo-800 underline;
+    @apply text-doshisha-purple-600 hover:text-doshisha-purple-400 underline;
 }
 
 .markdown-content img {
