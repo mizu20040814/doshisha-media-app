@@ -9,12 +9,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## アーキテクチャ
 
 ### 技術スタック
-- **フレームワーク**: Next.js 14 (App Router)
+- **フレームワーク**: Next.js 15.5.2 (App Router + Turbopack)
 - **データベース**: PostgreSQL (Supabase)
 - **認証**: NextAuth.js (管理者のみ)
-- **スタイリング**: Tailwind CSS
+- **スタイリング**: Tailwind CSS 4.0
 - **Markdown処理**: react-markdown + remark-gfm
 - **Markdownエディタ**: @uiw/react-md-editor
+- **開発**: TypeScript 5.0, ESLint
 - **デプロイ**: Vercel
 
 ### アプリケーション構成
@@ -103,42 +104,73 @@ npm run type-check   # TypeScript型チェック実行
    - 24時間の有効期限
    - セキュアなクッキー設定
 
-## 実装済み機能（2025-09-03時点）
+## 実装済み機能（2025-09-07時点）
 
-### ✅ 完了済み
+### ✅ Phase 1: 基本セットアップ（完了）
 1. **データベース基盤**
-   - Supabaseプロジェクト接続
+   - Supabaseプロジェクト接続完了
    - postsテーブル作成（UUID、カテゴリ、ステータス管理）
-   - 開発用RLS設定
+   - RLS設定（開発用）
 
 2. **認証システム**
    - NextAuth.js導入・設定完了
    - 管理者ログイン機能（`/admin/login`）
-   - ミドルウェアによるルート保護
-   - セッション管理（JWT、24時間）
+   - ミドルウェアによるルート保護（`/admin/*`）
+   - セッション管理（JWT、24時間有効期限）
 
-3. **ファイル構成**
-   ```
-   app/
-   ├── api/
-   │   ├── auth/[...nextauth]/route.ts  # 認証API
-   │   └── test-db/route.ts             # DB接続テスト
-   ├── admin/
-   │   └── login/page.tsx               # ログインページ
-   lib/
-   ├── supabase.ts                      # DBクライアント
-   └── auth.ts                          # 認証ヘルパー
-   types/
-   ├── database.ts                      # DB型定義
-   └── next-auth.d.ts                   # NextAuth型拡張
-   middleware.ts                        # ルート保護
-   ```
+3. **管理者機能**
+   - 記事管理ダッシュボード（`/admin`）
+   - 記事CRUD機能（作成・編集・削除・公開）
+   - Markdownエディタ統合（@uiw/react-md-editor）
+   - ライブプレビュー機能
 
-### 🚧 次の実装予定
-1. 管理者ダッシュボード（`/admin/page.tsx`）
-2. 記事CRUD機能
-3. パブリックページ（記事一覧・詳細）
-4. Markdownエディタ統合
+### ✅ Phase 2: パブリック機能（完了）
+1. **記事一覧表示**
+   - ホームページ（`/`）での公開記事一覧表示
+   - 記事カードコンポーネント（PostCard.tsx）
+   - カテゴリ別カラーコーディング
+   - レスポンシブデザイン対応
+   - クリック可能な記事カード
+
+2. **記事詳細表示**
+   - 記事詳細ページ（`/posts/[id]`）
+   - Markdown記事内容表示（react-markdown + remark-gfm）
+   - パンくずナビゲーション
+   - SEOメタデータ生成
+
+3. **関連記事機能**
+   - 同カテゴリ記事から関連記事表示
+   - 現在記事を除外した最大3件表示
+   - Suspense境界でローディング状態管理
+
+4. **ナビゲーション**
+   - サイトヘッダー（Header.tsx）
+   - カテゴリナビゲーション
+
+### ✅ Phase 3: コード品質向上（完了）
+1. **共通ユーティリティ関数**
+   - `lib/utils.ts`に共通関数集約
+   - カテゴリラベル・色管理の一元化
+   - Markdownクリーニング関数
+   - 日付フォーマット関数
+   - 重複コード排除（DRY原則適用）
+
+2. **TypeScript最適化**
+   - 型安全性向上
+   - Next.js 15対応（async params処理）
+   - 厳密な型チェック実装
+
+### 🚧 未実装機能
+1. **カテゴリページ**
+   - `/category/[category]`ページ実装
+   - カテゴリ別フィルタリング機能
+
+2. **最適化・追加機能**
+   - 画像アップロード機能
+   - 検索機能
+   - ページネーション
+   - コメント・いいね機能
+   - アンケート機能
 
 ## 重要な注意事項
 
