@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { supabase } from "@/lib/supabase";
-import { Post } from "@/types/database";
+import { Post, Category, Status } from "@/types/database";
 
 export async function GET(
     req: NextRequest,
@@ -100,11 +100,18 @@ export async function PUT(
             );
         }
 
-        const updateData: any = {
+        const updateData: {
+            title: string;
+            content: string;
+            category: Category;
+            status: Status;
+            updated_at: string;
+            published_at?: string;
+        } = {
             title,
             content,
-            category,
-            status: status || "draft",
+            category: category as Category,
+            status: (status || "draft") as Status,
             updated_at: new Date().toISOString(),
         };
         if (status === "published") {
@@ -117,7 +124,7 @@ export async function PUT(
                 updateData.published_at = new Date().toISOString();
             }
         } else if (status === "draft") {
-            updateData.published_at = null;
+            updateData.published_at = undefined;
         }
 
         // データ更新

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { supabase } from "@/lib/supabase";
+import { Category, Status } from "@/types/database";
 
 export async function GET(req: NextRequest) {
     try {
@@ -59,11 +60,18 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const postData: any = {
+        const postData: {
+            title: string;
+            content: string;
+            category: Category;
+            status: Status;
+            published_at?: string;
+            updated_at?: string;
+        } = {
             title,
             content,
-            category,
-            status: status || "draft",
+            category: category as Category,
+            status: (status || "draft") as Status,
             updated_at: new Date().toISOString(),
         };
 

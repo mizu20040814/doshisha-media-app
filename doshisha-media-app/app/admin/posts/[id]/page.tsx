@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { Category } from "@/types/database";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
@@ -210,7 +211,7 @@ export default function EditPostPage() {
                         </label>
                         <select
                             value={category}
-                            onChange={(e) => setCategory(e.target.value as any)}
+                            onChange={(e) => setCategory(e.target.value as Category)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
                         >
                             <option value="news">ニュース</option>
