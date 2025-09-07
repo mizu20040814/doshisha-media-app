@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Header from "@/components/Header";
 import RelatedPosts from "@/components/RelatedPosts";
+import { getCategoryLabel, getCategoryColor, formatDateLong, cleanMarkdownForPreview } from "@/lib/utils";
 
 type Post = {
     id: string;
@@ -44,33 +45,6 @@ async function getPost(id: string): Promise<Post | null> {
 }
 
 function PostContent({ post }: { post: Post }) {
-    const getCategoryLabel = (category: string) => {
-        const labels: { [key: string]: string } = {
-            news: "ニュース",
-            column: "コラム",
-            interview: "インタビュー",
-            survey: "アンケート企画",
-        };
-        return labels[category] || category;
-    };
-
-    const getCategoryColor = (category: string) => {
-        const colors: { [key: string]: string } = {
-            news: "bg-red-100 text-red-800",
-            column: "bg-blue-100 text-blue-800",
-            interview: "bg-green-100 text-green-800",
-            survey: "bg-purple-100 text-purple-800",
-        };
-        return colors[category] || "bg-gray-100 text-gray-800";
-    };
-
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("ja-JP", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-    };
 
     return (
         <article className="max-w-4xl mx-auto">
@@ -107,7 +81,7 @@ function PostContent({ post }: { post: Post }) {
                         {getCategoryLabel(post.category)}
                     </span>
                     <time className="text-gray-500">
-                        {formatDate(post.published_at)}
+                        {formatDateLong(post.published_at)}
                     </time>
                 </div>
 
@@ -185,12 +159,14 @@ export async function generateMetadata({ params }: PageProps) {
         };
     }
 
+    const description = cleanMarkdownForPreview(post.content);
+    
     return {
         title: `${post.title} | 同志社メディア`,
-        description: post.content.replace(/[#*`_~]/g, "").substring(0, 160),
+        description,
         openGraph: {
             title: post.title,
-            description: post.content.replace(/[#*`_~]/g, "").substring(0, 160),
+            description,
             type: "article",
             publishedTime: post.published_at,
         },

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { cleanMarkdownForPreview } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
     try {
@@ -38,10 +39,7 @@ export async function GET(req: NextRequest) {
         // 内容のプレビューを生成
         const postsWithPreview = posts?.map((post) => ({
             ...post,
-            preview:
-                post.content
-                    .replace(/[#*`_~]/g, "")
-                    .substring(0, 150) + "...",
+            preview: cleanMarkdownForPreview(post.content, 150) + "...",
         }));
 
         return NextResponse.json(postsWithPreview || []);

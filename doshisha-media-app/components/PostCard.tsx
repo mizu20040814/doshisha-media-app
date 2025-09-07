@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getCategoryLabel, getCategoryColor, formatDate } from "@/lib/utils";
 
 type PostCardProps = {
     id: string;
@@ -15,33 +16,6 @@ export default function PostCard({
     category,
     published_at,
 }: PostCardProps) {
-    const getCategoryLabel = (category: string) => {
-        const labels: { [key: string]: string } = {
-            news: "ニュース",
-            column: "コラム",
-            interview: "インタビュー",
-            survey: "アンケート企画",
-        };
-        return labels[category] || category;
-    };
-
-    const getCategoryColor = (category: string) => {
-        const colors: { [key: string]: string } = {
-            news: "bg-red-100 text-red-800",
-            column: "bg-blue-100 text-blue-800",
-            interview: "bg-green-100 text-green-800",
-            survey: "bg-purple-100 text-purple-800",
-        };
-        return colors[category] || "bg-gray-100 text-gray-800";
-    };
-
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("ja-JP", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-        });
-    };
 
     return (
         <Link href={`/posts/${id}`} className="block">

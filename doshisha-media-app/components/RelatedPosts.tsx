@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getCategoryLabel, formatDate } from "@/lib/utils";
 
 type RelatedPost = {
     id: string;
@@ -49,23 +50,6 @@ export default async function RelatedPosts({
         return null;
     }
 
-    const getCategoryLabel = (category: string) => {
-        const labels: { [key: string]: string } = {
-            news: "ニュース",
-            column: "コラム",
-            interview: "インタビュー",
-            survey: "アンケート企画",
-        };
-        return labels[category] || category;
-    };
-
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("ja-JP", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-        });
-    };
 
     return (
         <section>
