@@ -35,11 +35,11 @@ export function cleanMarkdownForPreview(content: string, length: number = PREVIE
         // 画像記法を除去 ![alt](url)
         .replace(/!\[([^\]]*)\]\([^\)]*\)/g, '')
         // 太字記法を除去 **text** および __text__ → text
-        .replace(/\*\*([^*]*)\*\*/g, '$1')
-        .replace(/__([^_]*)__/g, '$1')
+        .replace(/\*\*(.+?)\*\*/g, '$1')
+        .replace(/__(.+?)__/g, '$1')
         // イタリック記法を除去 *text* および _text_ → text
-        .replace(/\*([^*]*)\*/g, '$1')
-        .replace(/_([^_]*)_/g, '$1')
+        .replace(/\*(?!\*)(.+?)\*(?!\*)/g, '$1')
+        .replace(/_(.+?)_/g, '$1')
         // 取り消し線記法を除去 ~~text~~ → text
         .replace(/~~([^~]*)~~/g, '$1')
         // 引用記法を除去 > text → text
