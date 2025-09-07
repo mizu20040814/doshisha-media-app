@@ -1,13 +1,27 @@
+'use client';
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Category } from "@/types/database";
+import { getCategoryLabel } from "@/lib/utils";
 
 export default function Header() {
-    const categories = [
+    const pathname = usePathname();
+    
+    const categories: Array<{ value: "all" | Category; label: string }> = [
         { value: "all", label: "全て" },
-        { value: "news", label: "ニュース" },
-        { value: "column", label: "コラム" },
-        { value: "interview", label: "インタビュー" },
-        { value: "survey", label: "アンケート企画" },
+        { value: "news", label: getCategoryLabel("news") },
+        { value: "column", label: getCategoryLabel("column") },
+        { value: "interview", label: getCategoryLabel("interview") },
+        { value: "survey", label: getCategoryLabel("survey") },
     ];
+
+    const isActiveCategory = (categoryValue: "all" | Category): boolean => {
+        if (categoryValue === "all") {
+            return pathname === "/";
+        }
+        return pathname === `/category/${categoryValue}`;
+    };
 
     return (
         <header className="bg-white shadow-sm">
@@ -41,20 +55,27 @@ export default function Header() {
 
                 {/* カテゴリナビゲーション */}
                 <nav className="border-t border-gray-200">
-                    <div className="flex space-x-8 overflow-x-auto py-4">
-                        {categories.map((category) => (
-                            <Link
-                                key={category.value}
-                                href={
-                                    category.value === "all"
-                                        ? "/"
-                                        : `/category/${category.value}`
-                                }
-                                className="whitespace-nowrap text-sm font-medium text-gray-500 hover:text-indigo-600 border-b-2 border-transparent hover:border-indigo-600 pb-2"
-                            >
-                                {category.label}
-                            </Link>
-                        ))}
+                    <div className="flex space-x-6 sm:space-x-8 overflow-x-auto py-4 scrollbar-hide">
+                        {categories.map((category) => {
+                            const isActive = isActiveCategory(category.value);
+                            return (
+                                <Link
+                                    key={category.value}
+                                    href={
+                                        category.value === "all"
+                                            ? "/"
+                                            : `/category/${category.value}`
+                                    }
+                                    className={`whitespace-nowrap text-sm font-medium pb-2 border-b-2 transition-colors ${
+                                        isActive
+                                            ? "text-indigo-600 border-indigo-600"
+                                            : "text-gray-500 border-transparent hover:text-indigo-600 hover:border-indigo-600"
+                                    }`}
+                                >
+                                    {category.label}
+                                </Link>
+                            );
+                        })}
                     </div>
                 </nav>
             </div>

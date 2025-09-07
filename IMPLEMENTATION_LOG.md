@@ -1,163 +1,171 @@
-# 実装ログ - 同志社メディアアプリ
+# 同志社大学メディアアプリ - 実装ログ
 
-## 📅 実装日: 2025-09-03
+## 📋 プロジェクト概要
 
-### ✅ 完了した実装内容
+同志社大学学生向けウェブメディアサイトの実装記録。Next.js 15.5.2 + Supabase + NextAuth.jsを使用したフルスタックアプリケーション。
 
-## Phase 1: データベース基盤構築
+## 🚀 実装完了機能（2025-09-07 最新版）
 
-### 1. Supabaseセットアップ
-- Supabaseプロジェクト作成完了
-- PostgreSQLデータベース接続確立
+### ✅ Phase 1: 基本セットアップ（完了）
+- **日程**: 2025-09-03
+- **データベース**: Supabase接続、postsテーブル作成
+- **認証**: NextAuth.js設定、管理者ログイン
+- **ルート保護**: middleware.ts実装
 
-### 2. postsテーブル作成
-```sql
--- 実行済みSQL
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+### ✅ Phase 2: 管理者機能（完了）  
+- **日程**: 2025-09-04～09-06
+- **記事CRUD**: 作成・編集・削除・公開機能
+- **エディタ**: @uiw/react-md-editor統合
+- **ダッシュボード**: 記事管理画面
 
-CREATE TABLE posts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  title VARCHAR(255) NOT NULL,
-  content TEXT NOT NULL,
-  category VARCHAR(50) NOT NULL CHECK (category IN ('news', 'column', 'interview', 'survey')),
-  status VARCHAR(20) DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
-  published_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  author_id UUID
-);
+### ✅ Phase 3: パブリック機能（完了）
+- **日程**: 2025-09-07
+- **ホームページ**: 公開記事一覧表示
+- **記事詳細**: Markdown表示、関連記事
+- **コンポーネント**: PostCard、Header、RelatedPosts
 
--- 自動更新トリガー設定済み
-CREATE TRIGGER update_posts_updated_at
-BEFORE UPDATE ON posts
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at();
-```
+### ✅ Phase 4: コード品質向上（完了）
+- **日程**: 2025-09-07
+- **TypeScript**: 型安全性向上、ESLintエラー修正
+- **ユーティリティ**: lib/utils.ts統合
+- **型定義**: types/database.ts整備
 
-### 3. 環境変数設定
-`.env.local`ファイルに以下を設定済み：
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `NEXTAUTH_SECRET`
-- `NEXTAUTH_URL`
-- `ADMIN_USERNAME`
-- `ADMIN_PASSWORD`
+### ✅ Phase 5: カテゴリページ実装（完了）
+- **日程**: 2025-09-07
+- **API**: `/api/public-posts/category/[category]`
+- **ページ**: `/category/[category]`実装
+- **ナビゲーション**: アクティブ状態表示
 
-### 4. Supabaseクライアント実装
-- `/lib/supabase.ts`: 基本クライアント作成済み
-- `/types/database.ts`: Post型定義作成済み
-- データベース接続テスト成功（`/api/test-db`）
+## 🏗️ アーキテクチャ
 
-### 5. RLS（Row Level Security）設定
-- 開発環境用に一時的にRLS無効化
-- 本番環境前に適切なポリシー設定が必要
+### 技術スタック
+- **フレームワーク**: Next.js 15.5.2 (App Router + Turbopack)
+- **データベース**: PostgreSQL (Supabase)
+- **認証**: NextAuth.js v4.24.11
+- **スタイリング**: Tailwind CSS 4.0
+- **エディタ**: @uiw/react-md-editor v4.0.8
+- **Markdown**: react-markdown + remark-gfm
 
-## Phase 2: 認証システム構築
-
-### 1. NextAuth.js導入
-```bash
-npm install next-auth
-```
-
-### 2. 認証設定実装
-- `/app/api/auth/[...nextauth]/route.ts`: NextAuth設定ファイル作成
-- CredentialsProviderで管理者認証実装
-- JWT戦略でセッション管理（24時間有効）
-
-### 3. ミドルウェア実装
-- `/middleware.ts`: ルート保護設定
-- `/admin`配下のページを認証で保護
-- `/admin/login`は認証不要に設定
-- 無限リダイレクトループ問題を解決
-
-### 4. 型定義追加
-- `/types/next-auth.d.ts`: NextAuth用TypeScript型定義
-- セッションにユーザーIDを追加
-
-### 5. 認証ヘルパー関数
-- `/lib/auth.ts`: サーバーサイドセッション取得関数
-
-### 6. 管理者ログインページ
-- `/app/admin/login/page.tsx`: ログインフォーム実装
-- エラーハンドリング付き
-- ログイン後の自動リダイレクト機能
-
-## 🔧 使用技術・パッケージ
-
-### インストール済みパッケージ
-```json
-{
-  "dependencies": {
-    "@supabase/supabase-js": "最新版",
-    "@supabase/ssr": "最新版",
-    "next-auth": "最新版",
-    "next": "14.x",
-    "react": "^18",
-    "react-dom": "^18",
-    "typescript": "^5"
-  }
-}
-```
-
-## 🐛 解決した問題
-
-1. **RLSエラー**: `new row violates row-level security policy`
-   - 解決策: 開発環境用にRLS一時無効化
-
-2. **無限リダイレクトループ**: `/admin`アクセス時に無限ループ
-   - 原因: `/admin/login`も認証チェック対象
-   - 解決策: ミドルウェアで`/admin/login`を除外
-
-3. **TypeScriptエラー**: `session.user.id`の型エラー
-   - 解決策: `next-auth.d.ts`で型拡張
-
-## 📊 現在のプロジェクト構造
-
+### ファイル構造
 ```
 doshisha-media-app/
 ├── app/
 │   ├── api/
-│   │   ├── auth/[...nextauth]/route.ts  # NextAuth設定
-│   │   └── test-db/route.ts             # DB接続テスト
-│   ├── admin/
-│   │   └── login/page.tsx               # ログインページ
+│   │   ├── auth/[...nextauth]/route.ts
+│   │   ├── posts/                      # 管理者用API
+│   │   │   ├── route.ts
+│   │   │   └── [id]/route.ts
+│   │   └── public-posts/               # パブリック用API
+│   │       ├── route.ts
+│   │       ├── [id]/route.ts
+│   │       └── category/[category]/route.ts
+│   ├── admin/                          # 管理者ページ
+│   │   ├── login/page.tsx
+│   │   ├── page.tsx
+│   │   └── posts/
+│   │       ├── new/page.tsx
+│   │       └── [id]/page.tsx
+│   ├── category/[category]/page.tsx    # カテゴリページ
+│   ├── posts/[id]/page.tsx            # 記事詳細
 │   ├── layout.tsx
-│   ├── page.tsx
-│   └── globals.css
+│   └── page.tsx                        # ホーム
+├── components/
+│   ├── Header.tsx
+│   ├── PostCard.tsx
+│   └── RelatedPosts.tsx
 ├── lib/
-│   ├── supabase.ts                      # Supabaseクライアント
-│   └── auth.ts                          # 認証ヘルパー
+│   ├── supabase.ts
+│   ├── auth.ts
+│   └── utils.ts                        # 共通関数
 ├── types/
-│   ├── database.ts                      # DB型定義
-│   └── next-auth.d.ts                   # NextAuth型拡張
-├── middleware.ts                        # ルート保護
-├── .env.local                          # 環境変数
-└── package.json
+│   ├── database.ts                     # 型定義
+│   └── next-auth.d.ts
+└── middleware.ts
 ```
 
-## 🎯 次の実装予定
+## 📊 データベーススキーマ
 
-1. **管理者ダッシュボード** (`/admin`)
-   - 記事一覧表示
-   - 記事管理機能
+### postsテーブル
+```sql
+posts {
+  id: UUID (Primary Key)
+  title: VARCHAR(255) NOT NULL
+  content: TEXT NOT NULL (Markdown)
+  category: ENUM('news', 'column', 'interview', 'survey')
+  status: ENUM('draft', 'published') DEFAULT 'draft'
+  published_at: TIMESTAMP
+  created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updated_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  author_id: UUID
+}
+```
 
-2. **記事CRUD機能**
-   - 新規作成 (`/admin/posts/new`)
-   - 編集 (`/admin/posts/[id]`)
-   - 削除機能
+## 🎯 実装されたURL構成
 
-3. **パブリックページ**
-   - トップページ記事一覧
-   - 記事詳細ページ
-   - カテゴリ別表示
+### パブリックルート
+- `/` - ホームページ（記事一覧）
+- `/posts/[id]` - 記事詳細ページ
+- `/category/[category]` - カテゴリ別記事一覧
 
-4. **Markdownエディタ導入**
-   - ライブプレビュー機能
-   - 画像アップロード（将来）
+### 管理者ルート
+- `/admin/login` - 管理者認証
+- `/admin` - 記事管理ダッシュボード
+- `/admin/posts/new` - 新規記事作成
+- `/admin/posts/[id]` - 記事編集
 
-## 📝 メモ・注意事項
+### APIエンドポイント
+- `/api/public-posts` - 公開記事一覧
+- `/api/public-posts/[id]` - 記事詳細
+- `/api/public-posts/category/[category]` - カテゴリ別記事
+- `/api/posts` - 管理者用記事管理
+- `/api/posts/[id]` - 管理者用記事操作
 
-- 管理者認証情報は`.env.local`で管理
-- RLSは本番環境前に必ず有効化し、適切なポリシーを設定すること
-- Service Role Keyは本番環境では環境変数で管理
-- 現在は管理者1名のみ（将来的に複数管理者対応可能）
+## 🔧 開発環境
+
+### セットアップ
+```bash
+npm install
+npm run dev          # 開発サーバー起動
+npm run build        # 本番ビルド
+npm run lint         # ESLint実行
+```
+
+### 環境変数
+```
+NEXTAUTH_SECRET=ランダムな秘密鍵
+NEXTAUTH_URL=http://localhost:3000
+ADMIN_USERNAME=管理者ユーザー名
+ADMIN_PASSWORD=管理者パスワード
+NEXT_PUBLIC_SUPABASE_URL=Supabaseプロジェクト URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=Supabase匿名キー
+```
+
+## 🚧 未実装機能
+
+1. **検索機能** - 記事タイトル・内容検索
+2. **ページネーション** - 記事一覧の分割表示
+3. **画像アップロード** - 記事への画像添付
+4. **コメント機能** - 読者コメント
+5. **いいね機能** - 記事評価
+6. **アンケート機能** - インタラクティブ投票
+
+## 📈 パフォーマンス
+
+### ビルド結果
+- **コンパイル**: ✅ 成功（ESLintエラー修正済み）
+- **静的ページ**: 11ページ生成
+- **バンドルサイズ**: 共有JS 131kB
+- **起動時間**: 2.7秒
+
+## 🎯 今後の改善点
+
+1. **キャッシュ最適化** - ISRの活用
+2. **SEO強化** - sitemap.xml、robots.txt
+3. **パフォーマンス最適化** - 画像最適化、コード分割
+4. **テスト実装** - Jest + Testing Library
+5. **CI/CD構築** - GitHub Actions
+
+---
+
+**最終更新**: 2025-09-07  
+**実装完了率**: 約80% (コア機能完了)
