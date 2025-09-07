@@ -31,7 +31,7 @@ async function getPublishedPosts(): Promise<Post[]> {
 }
 
 function PostGrid({ posts }: { posts: Post[] }) {
-    if (posts.length == 0) {
+    if (posts.length === 0) {
         return (
             <div className="text-center py-12">
                 <p className="text-gray-500">まだ記事がありません</p>
