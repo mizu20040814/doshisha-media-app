@@ -107,7 +107,7 @@ function CategoryPostGrid({ posts }: { posts: CategoryPost[] }) {
         return (
             <div className="text-center py-12">
                 <p className="text-gray-500">
-                    この カテゴリの記事はまだありません
+                    このカテゴリの記事はまだありません
                 </p>
             </div>
         );
