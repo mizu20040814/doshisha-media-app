@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import RelatedPosts from "@/components/RelatedPosts";
 import { getCategoryLabel, getCategoryColor, formatDateLong, cleanMarkdownForPreview } from "@/lib/utils";
 
@@ -144,6 +145,8 @@ export default async function PostDetailPage({ params }: PageProps) {
                     </Suspense>
                 </div>
             </main>
+
+            <Footer />
         </div>
     );
 }

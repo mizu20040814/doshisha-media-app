@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
 import { Category } from "@/types/database";
 import { getCategoryLabel } from "@/lib/utils";
@@ -98,6 +99,8 @@ export default async function CategoryPage({ params }: PageProps) {
                     <CategoryPostGrid posts={posts} />
                 </Suspense>
             </main>
+
+            <Footer />
         </div>
     );
 }
