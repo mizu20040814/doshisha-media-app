@@ -39,6 +39,10 @@ async function getCategoryPosts(category: string): Promise<CategoryPost[]> {
     }
 }
 
+type PageProps = {
+    params: Promise<{ category: string }>;
+};
+
 function isValidCategory(category: string): category is Category {
     const validCategories: Category[] = [
         "news",
