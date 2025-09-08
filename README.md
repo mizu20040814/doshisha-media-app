@@ -9,6 +9,7 @@
 - **記事管理システム**: 管理者による記事の作成・編集・削除
 - **Markdownエディタ**: リアルタイムプレビュー機能付き
 - **カテゴリ分類**: ニュース、コラム、インタビュー、アンケート企画
+- **記事検索機能**: タイトルでの部分一致検索
 - **管理者認証**: NextAuth.jsによる安全な認証システム
 - **レスポンシブデザイン**: モバイル・タブレット・デスクトップ対応
 
@@ -135,14 +136,16 @@ doshisha-media-app/
 │   ├── api/               # APIルート
 │   │   ├── auth/         # 認証API
 │   │   ├── posts/        # 記事CRUD API
-│   │   └── public-posts/ # 公開記事API
+│   │   └── public-posts/ # 公開記事API（検索API含む）
 │   ├── category/          # カテゴリ別ページ
 │   ├── posts/             # 記事詳細ページ
+│   ├── search/            # 検索結果ページ
 │   └── page.tsx           # ホームページ
 ├── components/            # Reactコンポーネント
-│   ├── Header.tsx        # ヘッダー
+│   ├── Header.tsx        # ヘッダー（検索バー付き）
 │   ├── Footer.tsx        # フッター
 │   ├── PostCard.tsx      # 記事カード
+│   ├── SearchBar.tsx     # 検索バー
 │   └── RelatedPosts.tsx  # 関連記事
 ├── lib/                   # ユーティリティ
 │   ├── supabase.ts       # Supabaseクライアント
@@ -193,7 +196,8 @@ doshisha-media-app/
 ## 今後の開発予定
 
 - [ ] 画像アップロード機能
-- [ ] 記事検索機能
+- [x] 記事検索機能（タイトル検索）
+- [ ] 全文検索機能（記事内容も含む）
 - [ ] ページネーション
 - [ ] コメント機能
 - [ ] いいね機能
