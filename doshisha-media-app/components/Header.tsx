@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Category } from "@/types/database";
 import { getCategoryLabel } from "@/lib/utils";
+import SearchBar from "./SearchBar";
 
 export default function Header() {
     const pathname = usePathname();
@@ -37,6 +38,10 @@ export default function Header() {
                         </Link>
                     </div>
 
+                    {/* 検索バー */}
+                    <div className="hidden md:block">
+                        <SearchBar />
+                    </div>
                 </div>
 
                 {/* カテゴリナビゲーション */}
