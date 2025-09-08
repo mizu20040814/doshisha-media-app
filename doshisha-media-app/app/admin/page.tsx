@@ -123,12 +123,33 @@ export default function AdminDashboard() {
                         <h1 className="text-2xl font-semibold text-gray-900">
                             記事管理
                         </h1>
-                        <Link
-                            href="/admin/posts/new"
-                            className="bg-doshisha-purple-600 text-white px-4 py-2 rounded-md hover:bg-doshisha-purple-500 transition-colors"
-                        >
-                            新規記事作成
-                        </Link>
+                        <div className="flex space-x-3">
+                            <Link
+                                href="/"
+                                className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-500 transition-colors flex items-center"
+                            >
+                                <svg
+                                    className="w-4 h-4 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                                    />
+                                </svg>
+                                サイトを見る
+                            </Link>
+                            <Link
+                                href="/admin/posts/new"
+                                className="bg-doshisha-purple-600 text-white px-4 py-2 rounded-md hover:bg-doshisha-purple-500 transition-colors"
+                            >
+                                新規記事作成
+                            </Link>
+                        </div>
                     </div>
 
                     {error && (
@@ -195,16 +216,42 @@ export default function AdminDashboard() {
                                             <td className="px-6 py-4 text-right text-sm font-medium">
                                                 <Link
                                                     href={`/admin/posts/${post.id}`}
-                                                    className="text-doshisha-purple-600 hover:text-doshisha-purple-400 mr-4"
+                                                    className="text-doshisha-purple-600 hover:text-doshisha-purple-400 mr-4 inline-flex items-center"
                                                 >
+                                                    <svg
+                                                        className="w-4 h-4 mr-1"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                                        />
+                                                    </svg>
                                                     編集
                                                 </Link>
                                                 <button
                                                     onClick={() =>
                                                         handleDelete(post.id)
                                                     }
-                                                    className="text-red-600 hover:text-red-900"
+                                                    className="text-red-600 hover:text-red-900 inline-flex items-center"
                                                 >
+                                                    <svg
+                                                        className="w-4 h-4 mr-1"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                                        />
+                                                    </svg>
                                                     削除
                                                 </button>
                                             </td>
