@@ -50,11 +50,12 @@ export function cleanMarkdownForPreview(content: string, length: number = PREVIE
         .replace(/^\d+\.\s+/gm, '')
         // 水平線を除去 --- *** ___
         .replace(/^[-*_]{3,}$/gm, '')
-        // テーブル記法を除去
-        .replace(/\|[^\n]*\|/g, '')
-        .replace(/^[-|:\s]+$/gm, '')
-        // 残留する記号を除去
-        .replace(/[*_#`~|\\]/g, '')
+        // テーブル記法を除去: ヘッダー・区切り・データ行をまとめて削除
+        .replace(
+            // マークダウンテーブルのブロック（ヘッダー、区切り、データ行）を検出して削除
+            /((?:.*\|.*\n)+\s*[-:| ]+\n(?:.*\|.*\n)*)/g,
+            ''
+        )
         // HTMLタグを除去
         .replace(/<[^>]*>/g, '')
         // 余分な空白・改行を整理
