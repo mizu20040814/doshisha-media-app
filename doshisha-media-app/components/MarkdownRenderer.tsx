@@ -4,6 +4,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ReactNode, createElement } from "react";
 
+// 日本語文字の正規表現
+const JAPANESE_CHARS_REGEX = /[^a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g;
+
 interface HeadingProps {
     level: number;
     children: ReactNode;
@@ -14,7 +17,7 @@ function generateId(children: ReactNode): string {
     if (typeof children === "string") {
         return children
             .toLowerCase()
-            .replace(/[^a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, "")
+            .replace(JAPANESE_CHARS_REGEX, "")
             .replace(/\s+/g, "-");
     }
     
@@ -23,7 +26,7 @@ function generateId(children: ReactNode): string {
             .map(child => typeof child === "string" ? child : "")
             .join("")
             .toLowerCase()
-            .replace(/[^a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, "")
+            .replace(JAPANESE_CHARS_REGEX, "")
             .replace(/\s+/g, "-");
     }
     
@@ -68,8 +71,16 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
                                 href={href}
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    // URLデコードしてIDを取得
-                                    const targetId = decodeURIComponent(href.slice(1));
+                                    // URLデコードしてIDを取得（エラーハンドリング付き）
+                                    let targetId: string;
+                                    try {
+                                        targetId = decodeURIComponent(href.slice(1));
+                                    } catch (error) {
+                                        // デコードに失敗した場合は何もしない
+                                        console.warn('Failed to decode URI component:', href, error);
+                                        return;
+                                    }
+                                    
                                     const element = document.getElementById(targetId);
                                     if (element) {
                                         const headerOffset = 100;
