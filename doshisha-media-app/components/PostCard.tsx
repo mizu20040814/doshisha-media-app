@@ -23,7 +23,7 @@ export default function PostCard({
                 <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                         <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(
+                            className={`inline-flex items-center px-2.5 py-0.5 border text-xs font-medium ${getCategoryColor(
                                 category
                             )}`}
                         >

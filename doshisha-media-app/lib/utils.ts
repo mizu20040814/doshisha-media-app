@@ -6,10 +6,10 @@ export const CATEGORY_LABELS: { [key: string]: string } = {
 };
 
 export const CATEGORY_COLORS: { [key: string]: string } = {
-    news: "bg-red-100 text-red-800",
-    column: "bg-blue-100 text-blue-800",
-    interview: "bg-green-100 text-green-800",
-    survey: "bg-purple-100 text-purple-800",
+    news: "border-red-600 text-red-600",
+    column: "border-blue-600 text-blue-600",
+    interview: "border-green-600 text-green-600",
+    survey: "border-purple-600 text-purple-600",
 };
 
 export function getCategoryLabel(category: string): string {
@@ -17,7 +17,7 @@ export function getCategoryLabel(category: string): string {
 }
 
 export function getCategoryColor(category: string): string {
-    return CATEGORY_COLORS[category] || "bg-gray-100 text-gray-800";
+    return CATEGORY_COLORS[category] || "border-gray-600 text-gray-600";
 }
 
 const PREVIEW_LENGTH = 160;
