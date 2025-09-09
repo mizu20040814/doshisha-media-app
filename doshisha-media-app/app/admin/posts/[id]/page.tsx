@@ -232,6 +232,9 @@ export default function EditPostPage() {
                                 preview="live"
                                 height={400}
                                 data-color-mode="light"
+                                previewOptions={{
+                                    className: "markdown-content"
+                                }}
                             />
                         </div>
                     </div>
