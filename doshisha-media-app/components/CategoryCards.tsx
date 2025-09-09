@@ -45,7 +45,7 @@ export default function CategoryCards() {
                 {categories.map((category) => (
                     <Link
                         key={category.id}
-                        href={`/search?category=${category.id}`}
+                        href={`/category/${category.id}`}
                         className="group block"
                     >
                         <div className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">

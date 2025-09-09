@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RelatedPosts from "@/components/RelatedPosts";
+import ScrollProgress from "@/components/ScrollProgress";
+import ScrollToTop from "@/components/ScrollToTop";
 import { getCategoryLabel, getCategoryColor, formatDateLong, cleanMarkdownForPreview } from "@/lib/utils";
 
 type Post = {
@@ -93,11 +94,7 @@ function PostContent({ post }: { post: Post }) {
 
             {/* 記事本文 */}
             <div className="prose prose-lg max-w-none markdown-content">
-                <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                >
-                    {post.content}
-                </ReactMarkdown>
+                <MarkdownRenderer content={post.content} />
             </div>
         </article>
     );
@@ -113,6 +110,7 @@ export default async function PostDetailPage({ params }: PageProps) {
 
     return (
         <div className="min-h-screen bg-white">
+            <ScrollProgress />
             <Header />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -147,6 +145,7 @@ export default async function PostDetailPage({ params }: PageProps) {
             </main>
 
             <Footer />
+            <ScrollToTop />
         </div>
     );
 }

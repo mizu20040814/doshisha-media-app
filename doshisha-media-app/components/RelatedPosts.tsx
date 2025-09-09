@@ -59,24 +59,22 @@ export default async function RelatedPosts({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((post) => (
-                    <article
+                    <Link
                         key={post.id}
-                        className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                        href={`/posts/${post.id}`}
+                        className="block"
                     >
-                        <div className="p-4">
-                            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
-                                <Link
-                                    href={`/posts/${post.id}`}
-                                    className="hover:text-indigo-600"
-                                >
+                        <article className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-doshisha-purple-300 transition-all cursor-pointer h-full">
+                            <div className="p-4">
+                                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-doshisha-purple-600">
                                     {post.title}
-                                </Link>
-                            </h3>
-                            <time className="text-sm text-gray-500">
-                                {formatDate(post.published_at)}
-                            </time>
-                        </div>
-                    </article>
+                                </h3>
+                                <time className="text-sm text-gray-500">
+                                    {formatDate(post.published_at)}
+                                </time>
+                            </div>
+                        </article>
+                    </Link>
                 ))}
             </div>
         </section>

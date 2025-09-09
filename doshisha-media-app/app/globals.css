@@ -37,6 +37,10 @@ body {
     font-family: var(--font-noto-sans-jp), 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 /* line-clamp utilities for text truncation */
 .line-clamp-2 {
     display: -webkit-box;
@@ -52,77 +56,192 @@ body {
     overflow: hidden;
 }
 
-/* Markdown content styling */
+/* Markdown content styling - Enhanced */
 .markdown-content {
     @apply text-gray-800 leading-relaxed;
+    font-size: 1.0625rem;
+    line-height: 1.8;
 }
 
+/* 見出しデザイン */
 .markdown-content h1,
 .markdown-content h2,
 .markdown-content h3,
 .markdown-content h4,
 .markdown-content h5,
 .markdown-content h6 {
-    @apply font-bold text-gray-900 mt-8 mb-4;
+    @apply font-bold text-gray-900 mt-12 mb-6;
+    line-height: 1.3;
 }
 
 .markdown-content h1 {
     @apply text-3xl;
 }
+
 .markdown-content h2 {
-    @apply text-2xl;
-}
-.markdown-content h3 {
-    @apply text-xl;
+    @apply text-2xl border-b-2 border-gray-200 pb-3;
+    position: relative;
 }
 
+.markdown-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #660066, #8b5cf6);
+}
+
+.markdown-content h3 {
+    @apply text-xl pl-4;
+    position: relative;
+}
+
+.markdown-content h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 1.2em;
+    background: #660066;
+}
+
+/* 段落 */
 .markdown-content p {
     @apply mb-6;
+    letter-spacing: 0.02em;
 }
 
-.markdown-content ul,
-.markdown-content ol {
+/* リスト装飾 */
+.markdown-content ul {
     @apply mb-6 ml-6;
 }
 
-.markdown-content li {
-    @apply mb-2;
+.markdown-content ul li {
+    @apply mb-3 relative pl-2;
+    list-style: none;
 }
 
+.markdown-content ul li::before {
+    content: '▸';
+    @apply absolute left-0 text-doshisha-purple-600;
+    transform: translateX(-1.5rem);
+}
+
+.markdown-content ol {
+    @apply mb-6 ml-6;
+    counter-reset: list-counter;
+}
+
+.markdown-content ol li {
+    @apply mb-3 relative pl-2;
+    list-style: none;
+    counter-increment: list-counter;
+}
+
+.markdown-content ol li::before {
+    content: counter(list-counter);
+    @apply absolute -left-6 text-white bg-doshisha-purple-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold;
+    top: 0.125rem;
+}
+
+/* 引用ブロック - シンプルスタイル */
 .markdown-content blockquote {
-    @apply border-l-4 border-doshisha-purple-500 pl-4 italic text-gray-600 my-6;
+    @apply my-8 pl-6 py-2 bg-gray-50;
+    border-left: 4px solid #660066;
+    border-radius: 0;
 }
 
+.markdown-content blockquote p {
+    @apply mb-0 text-gray-700;
+    font-style: normal;
+}
+
+/* インラインコード */
 .markdown-content code {
-    @apply bg-gray-100 px-2 py-1 rounded text-sm;
+    @apply bg-gray-100 px-2 py-1 rounded text-sm text-red-600;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-weight: 500;
 }
 
+/* コードブロック */
 .markdown-content pre {
-    @apply bg-gray-100 p-4 rounded-lg overflow-x-auto my-6;
+    @apply relative bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-8 shadow-lg;
+    font-size: 0.9rem;
+    line-height: 1.6;
 }
 
 .markdown-content pre code {
-    @apply bg-transparent px-0 py-0;
+    @apply bg-transparent px-0 py-0 text-gray-100;
+    font-weight: normal;
 }
 
+/* コピーボタン用のスペース */
+.markdown-content pre:hover::after {
+    content: 'Copy';
+    @apply absolute top-2 right-2 px-2 py-1 bg-gray-700 text-white text-xs rounded cursor-pointer hover:bg-gray-600;
+}
+
+/* リンク */
 .markdown-content a {
-    @apply text-doshisha-purple-600 hover:text-doshisha-purple-400 underline;
+    @apply text-doshisha-purple-600 hover:text-doshisha-purple-400 underline decoration-2 underline-offset-2 transition-colors;
 }
 
+.markdown-content a:hover {
+    @apply decoration-doshisha-purple-400;
+}
+
+/* 画像 */
 .markdown-content img {
-    @apply max-w-full h-auto rounded-lg my-6;
+    @apply max-w-full h-auto rounded-lg my-8 shadow-md;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+/* テーブル */
 .markdown-content table {
-    @apply w-full border-collapse border border-gray-300 my-6;
+    @apply w-full border-collapse my-8 shadow-sm rounded-lg overflow-hidden;
+}
+
+.markdown-content thead {
+    @apply bg-gradient-to-r from-gray-50 to-gray-100;
 }
 
 .markdown-content th,
 .markdown-content td {
-    @apply border border-gray-300 px-4 py-2;
+    @apply px-6 py-3 text-left;
 }
 
 .markdown-content th {
-    @apply bg-gray-100 font-semibold;
+    @apply font-semibold text-gray-900 border-b-2 border-gray-200;
+}
+
+.markdown-content td {
+    @apply border-b border-gray-100;
+}
+
+.markdown-content tbody tr:hover {
+    @apply bg-gray-50 transition-colors;
+}
+
+.markdown-content tbody tr:last-child td {
+    @apply border-b-0;
+}
+
+/* 水平線 */
+.markdown-content hr {
+    @apply my-12 border-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent;
+}
+
+/* 強調テキスト */
+.markdown-content strong {
+    @apply font-bold text-gray-900;
+}
+
+.markdown-content em {
+    @apply italic text-gray-700;
 }
