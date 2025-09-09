@@ -42,7 +42,7 @@ export default function PostCard({
                         {preview}
                     </p>
 
-                    <div className="inline-flex items-center text-doshisha-purple-600 hover:text-doshisha-purple-400 text-sm font-medium">
+                    <div className="inline-flex items-center text-gray-700 hover:text-doshisha-purple-400 text-sm font-medium">
                         続きを読む
                         <svg
                             className="w-4 h-4 ml-1"
