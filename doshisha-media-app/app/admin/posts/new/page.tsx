@@ -132,6 +132,9 @@ export default function NewPostPage() {
                             preview="live"
                             height={400}
                             data-color-mode="light"
+                            previewOptions={{
+                                className: "markdown-content"
+                            }}
                         />
                     </div>
                 </div>
