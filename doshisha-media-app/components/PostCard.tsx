@@ -18,9 +18,9 @@ export default function PostCard({
 }: PostCardProps) {
 
     return (
-        <Link href={`/posts/${id}`} className="block">
-            <article className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer">
-                <div className="p-6">
+        <Link href={`/posts/${id}`} className="block h-full">
+            <article className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer h-full flex flex-col">
+                <div className="p-6 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-3">
                         <span
                             className={`inline-flex items-center px-2.5 py-0.5 border text-xs font-medium ${getCategoryColor(
@@ -34,15 +34,15 @@ export default function PostCard({
                         </time>
                     </div>
 
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-doshisha-purple-400">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-doshisha-purple-400 min-h-[3.5rem]">
                         {title}
                     </h3>
 
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
                         {preview}
                     </p>
 
-                    <div className="inline-flex items-center text-gray-700 hover:text-doshisha-purple-400 text-sm font-medium">
+                    <div className="inline-flex items-center text-gray-700 hover:text-doshisha-purple-400 text-sm font-medium mt-auto">
                         続きを読む
                         <svg
                             className="w-4 h-4 ml-1"
