@@ -75,7 +75,7 @@ function PostContent({ post }: { post: Post }) {
             <header className="mb-8">
                 <div className="flex items-center gap-4 mb-4">
                     <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(
+                        className={`inline-flex items-center px-3 py-1 border text-sm font-medium ${getCategoryColor(
                             post.category
                         )}`}
                     >

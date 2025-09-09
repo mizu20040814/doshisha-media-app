@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
+import CategoryCards from "@/components/CategoryCards";
 
 type Post = {
     id: string;
@@ -95,6 +96,8 @@ export default async function HomePage() {
                 >
                     <PostGrid posts={posts} />
                 </Suspense>
+
+                <CategoryCards />
             </main>
 
             <Footer />
