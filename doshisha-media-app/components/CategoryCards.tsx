@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type Category = {
     id: string;
@@ -49,10 +50,15 @@ export default function CategoryCards() {
                     >
                         <div className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
                             <div className="relative h-48 overflow-hidden">
-                                <img
+                                <Image
                                     src={category.image}
                                     alt={category.name}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                    priority={false}
+                                    placeholder="blur"
+                                    blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k="
                                 />
                             </div>
                             <div className="p-4 flex items-center justify-between">
