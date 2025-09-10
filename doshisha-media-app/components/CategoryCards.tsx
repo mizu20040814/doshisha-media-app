@@ -34,7 +34,7 @@ export default function CategoryCards() {
     return (
         <div className="mt-16 mb-12">
             <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                <h2 id="category" className="text-3xl font-bold text-gray-900 mb-2">
                     カテゴリー
                 </h2>
                 <p className="text-gray-600">
