@@ -30,13 +30,13 @@ export default function HeroSection() {
                     <div className="flex flex-col sm:flex-row gap-4">
                         <Link 
                             href="#latest-posts"
-                            className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200 text-center"
+                            className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-8 py-3 transition-colors duration-200 text-center"
                         >
                             最新記事を読む
                         </Link>
                         <Link 
                             href="#category"
-                            className="inline-block bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-lg border border-white/30 transition-colors duration-200 text-center"
+                            className="inline-block bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold px-8 py-3 border border-white/30 transition-colors duration-200 text-center"
                         >
                             カテゴリーを見る
                         </Link>
