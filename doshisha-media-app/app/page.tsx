@@ -16,7 +16,7 @@ type Post = {
 async function getPublishedPosts(): Promise<Post[]> {
     try {
         const res = await fetch(
-            `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/public-posts`,
+            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL || 'http://localhost:3000'}/api/public-posts`,
             {
                 cache: "no-store",
             }

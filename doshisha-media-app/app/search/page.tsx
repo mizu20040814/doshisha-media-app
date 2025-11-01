@@ -22,7 +22,7 @@ async function getSearchResults(query: string, limit?: string): Promise<SearchPo
         if (limit) params.set("limit", limit);
 
         const res = await fetch(
-            `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/public-posts/search?${params.toString()}`,
+            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL || "http://localhost:3000"}/api/public-posts/search?${params.toString()}`,
             {
                 cache: "no-store",
             }

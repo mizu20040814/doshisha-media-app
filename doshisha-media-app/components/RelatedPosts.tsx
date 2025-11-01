@@ -19,7 +19,7 @@ async function getRelatedPosts(
     try {
         const res = await fetch(
             `${
-                process.env.NEXTAUTH_URL || "http://localhost:3000"
+                process.env.NEXT_PUBLIC_NEXTAUTH_URL || "http://localhost:3000"
             }/api/public-posts?category=${category}&limit=4`,
             {
                 cache: "no-store",

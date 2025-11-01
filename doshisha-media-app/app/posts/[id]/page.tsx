@@ -26,7 +26,7 @@ async function getPost(id: string): Promise<Post | null> {
     try {
         const res = await fetch(
             `${
-                process.env.NEXTAUTH_URL || "http://localhost:3000"
+                process.env.NEXT_PUBLIC_NEXTAUTH_URL || "http://localhost:3000"
             }/api/public-posts/${id}`,
             { cache: "no-store" }
         );
