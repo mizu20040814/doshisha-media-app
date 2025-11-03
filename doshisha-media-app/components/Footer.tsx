@@ -99,29 +99,6 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
-
-                {/* 下部コピーライト */}
-                <div className="mt-8 pt-8 border-t border-gray-800">
-                    <div className="flex flex-col md:flex-row justify-between items-center">
-                        <p className="text-gray-400 text-sm">
-                            © {currentYear} 同志社メディア. All rights reserved.
-                        </p>
-                        <div className="mt-4 md:mt-0 flex space-x-6">
-                            <Link
-                                href="/privacy"
-                                className="text-gray-400 hover:text-white text-sm transition-colors"
-                            >
-                                プライバシーポリシー
-                            </Link>
-                            <Link
-                                href="/terms"
-                                className="text-gray-400 hover:text-white text-sm transition-colors"
-                            >
-                                利用規約
-                            </Link>
-                        </div>
-                    </div>
-                </div>
             </div>
         </footer>
     );
