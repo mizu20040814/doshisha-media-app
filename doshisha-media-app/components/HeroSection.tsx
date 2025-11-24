@@ -23,8 +23,10 @@ export default function HeroSection() {
                             学生メディア
                         </span>
                     </h1>
-                    <p className="text-lg md:text-xl mb-8 text-gray-200">
+                    <p className="text-lg md:text-xl text-gray-200">
                         キャンパスライフの最新情報を、学生目線でお届けします。
+                    </p>
+                    <p className="text-lg md:text-xl mb-8 text-gray-200">
                         イベント、サークル活動、学生生活のリアルな声を発信中。
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4">

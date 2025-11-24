@@ -91,10 +91,10 @@ export default function Footer() {
                         </div>
                         <div className="mt-6">
                             <Link
-                                href="/contact"
+                                href="/aboutus"
                                 className="text-gray-400 hover:text-white transition-colors text-sm"
                             >
-                                お問い合わせ
+                                About Us
                             </Link>
                         </div>
                     </div>
