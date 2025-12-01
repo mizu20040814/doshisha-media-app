@@ -67,6 +67,16 @@ export default function Header() {
                                 </Link>
                             );
                         })}
+                        <Link
+                            href="/aboutus"
+                            className={`whitespace-nowrap text-sm font-medium pb-2 border-b-2 transition-colors ${
+                                pathname === "/aboutus"
+                                    ? "text-doshisha-purple-600 border-doshisha-purple-600"
+                                    : "text-gray-500 border-transparent hover:text-doshisha-purple-400 hover:border-doshisha-purple-400"
+                            }`}
+                        >
+                            About Us
+                        </Link>
                     </div>
                 </nav>
             </div>
