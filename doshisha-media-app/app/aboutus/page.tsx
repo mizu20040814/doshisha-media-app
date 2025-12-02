@@ -290,7 +290,7 @@ export default function AboutUsPage() {
                         <p className="text-lg text-gray-700">
                             Email:{" "}
                             <span className="text-purple-600 font-semibold">
-                                contact@example.com
+                                doshishamediaapp@gmail.com
                             </span>
                             （仮）
                         </p>
