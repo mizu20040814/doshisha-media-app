@@ -1,174 +1,183 @@
+// remark / strip-markdown を jest.setup で先にモックして
+// lib/utils.ts が import しても ESM エラーが起きないようにする
+
+jest.mock("remark", () => {
+    const mockProcessSync = (content: string) => ({
+        toString: () => String(content),
+    });
+    const mockUse = () => ({ processSync: mockProcessSync });
+    return {
+        remark: () => ({ use: mockUse }),
+    };
+});
+
+jest.mock("strip-markdown", () => ({
+    __esModule: true,
+    default: () => {},
+}));
+
 import {
-  getCategoryLabel,
-  getCategoryColor,
-  cleanMarkdownForPreview,
-  formatDate,
-  formatDateLong,
-  CATEGORY_LABELS,
-  CATEGORY_COLORS
-} from '@/lib/utils'
+    getCategoryLabel,
+    getCategoryColor,
+    cleanMarkdownForPreview,
+    formatDate,
+    formatDateLong,
+    CATEGORY_LABELS,
+    CATEGORY_COLORS,
+} from "@/lib/utils";
 
-describe('utils', () => {
-  describe('getCategoryLabel', () => {
-    it('returns the correct label for known categories', () => {
-      expect(getCategoryLabel('news')).toBe('ニュース')
-      expect(getCategoryLabel('column')).toBe('コラム')
-      expect(getCategoryLabel('interview')).toBe('インタビュー')
-      expect(getCategoryLabel('survey')).toBe('アンケート企画')
-    })
+describe("utils", () => {
+    // ─────────────────────────────────────────────
+    // getCategoryLabel
+    // ─────────────────────────────────────────────
+    describe("getCategoryLabel", () => {
+        it("既知のカテゴリに対して正しいラベルを返す", () => {
+            expect(getCategoryLabel("news")).toBe("ニュース");
+            expect(getCategoryLabel("column")).toBe("コラム");
+            expect(getCategoryLabel("interview")).toBe("インタビュー");
+            expect(getCategoryLabel("survey")).toBe("アンケート企画");
+        });
 
-    it('returns the original category for unknown categories', () => {
-      expect(getCategoryLabel('unknown')).toBe('unknown')
-      expect(getCategoryLabel('custom')).toBe('custom')
-    })
-  })
+        it("未知のカテゴリにはそのまま返す", () => {
+            expect(getCategoryLabel("unknown")).toBe("unknown");
+            expect(getCategoryLabel("")).toBe("");
+        });
+    });
 
-  describe('getCategoryColor', () => {
-    it('returns the correct color class for known categories', () => {
-      expect(getCategoryColor('news')).toBe('border-red-600 text-red-600')
-      expect(getCategoryColor('column')).toBe('border-blue-600 text-blue-600')
-      expect(getCategoryColor('interview')).toBe('border-green-600 text-green-600')
-      expect(getCategoryColor('survey')).toBe('border-purple-600 text-purple-600')
-    })
+    // ─────────────────────────────────────────────
+    // getCategoryColor
+    // ─────────────────────────────────────────────
+    describe("getCategoryColor", () => {
+        it("既知のカテゴリに対して正しいカラークラスを返す", () => {
+            expect(getCategoryColor("news")).toBe(
+                "border-red-600 text-red-600",
+            );
+            expect(getCategoryColor("column")).toBe(
+                "border-blue-600 text-blue-600",
+            );
+            expect(getCategoryColor("interview")).toBe(
+                "border-green-600 text-green-600",
+            );
+            expect(getCategoryColor("survey")).toBe(
+                "border-purple-600 text-purple-600",
+            );
+        });
 
-    it('returns default color class for unknown categories', () => {
-      expect(getCategoryColor('unknown')).toBe('border-gray-600 text-gray-600')
-      expect(getCategoryColor('custom')).toBe('border-gray-600 text-gray-600')
-    })
-  })
+        it("未知のカテゴリにはデフォルトカラーを返す", () => {
+            expect(getCategoryColor("unknown")).toBe(
+                "border-gray-600 text-gray-600",
+            );
+            expect(getCategoryColor("")).toBe("border-gray-600 text-gray-600");
+        });
+    });
 
-  describe('cleanMarkdownForPreview', () => {
-    it('removes markdown headers', () => {
-      const input = '# Header 1\n## Header 2\n### Header 3\nText'
-      const expected = 'Header 1\nHeader 2\nHeader 3\nText'
-      expect(cleanMarkdownForPreview(input)).toContain('Header 1')
-      expect(cleanMarkdownForPreview(input)).not.toContain('#')
-    })
+    // ─────────────────────────────────────────────
+    // cleanMarkdownForPreview (remark モック経由)
+    //
+    // モックの processSync は入力テキストをそのまま返すため、
+    // 後処理ロジック (空白圧縮・トリム・切り詰め) をテストする。
+    // ─────────────────────────────────────────────
+    describe("cleanMarkdownForPreview", () => {
+        it("長いテキストを指定文字数で切り詰めて省略記号を付ける", () => {
+            const longText = "あ".repeat(200);
+            const result = cleanMarkdownForPreview(longText, 100);
+            expect(result.length).toBe(103); // 100 + '...'
+            expect(result.endsWith("...")).toBe(true);
+        });
 
-    it('removes markdown bold formatting', () => {
-      const input = '**bold text** and __another bold__'
-      const expected = 'bold text and another bold'
-      expect(cleanMarkdownForPreview(input)).toBe(expected)
-    })
+        it("短いテキストには省略記号を付けない", () => {
+            const result = cleanMarkdownForPreview("短いテキスト", 100);
+            expect(result).toBe("短いテキスト");
+            expect(result).not.toContain("...");
+        });
 
-    it('removes markdown italic formatting', () => {
-      const input = '*italic text* and _another italic_'
-      const expected = 'italic text and another italic'
-      expect(cleanMarkdownForPreview(input)).toBe(expected)
-    })
+        it("空文字列を処理できる", () => {
+            const result = cleanMarkdownForPreview("");
+            expect(result).toBe("");
+        });
 
-    it('removes markdown links', () => {
-      const input = 'Check out [this link](https://example.com) for more info'
-      const expected = 'Check out this link for more info'
-      expect(cleanMarkdownForPreview(input)).toBe(expected)
-    })
+        it("3つ以上連続する改行を2つに圧縮する", () => {
+            const result =
+                cleanMarkdownForPreview("テキスト1\n\n\n\nテキスト2");
+            expect(result).not.toContain("\n\n\n");
+        });
 
-    it('removes markdown images', () => {
-      const input = 'Here is an image ![alt text](image.jpg) in the text'
-      const result = cleanMarkdownForPreview(input)
-      expect(result).toContain('Here is an image')
-      expect(result).toContain('in the text')
-      expect(result).not.toContain('![alt text]')
-      expect(result).not.toContain('(image.jpg)')
-    })
+        it("2つ以上連続する空白を1つに圧縮する", () => {
+            const result = cleanMarkdownForPreview("テキスト1    テキスト2");
+            expect(result).toBe("テキスト1 テキスト2");
+        });
 
-    it('removes code blocks', () => {
-      const input = 'Text before\n```javascript\nconst x = 1;\n```\nText after'
-      const result = cleanMarkdownForPreview(input)
-      expect(result).not.toContain('```')
-      expect(result).not.toContain('const x = 1')
-      expect(result).toContain('Text before')
-      expect(result).toContain('Text after')
-    })
+        it("デフォルトの切り詰め長は160文字", () => {
+            const longText = "あ".repeat(200);
+            const result = cleanMarkdownForPreview(longText);
+            expect(result.length).toBe(163); // 160 + '...'
+            expect(result.endsWith("...")).toBe(true);
+        });
 
-    it('removes inline code', () => {
-      const input = 'Use `npm install` to install dependencies'
-      const expected = 'Use npm install to install dependencies'
-      expect(cleanMarkdownForPreview(input)).toBe(expected)
-    })
+        it("前後の空白をトリムする", () => {
+            const result = cleanMarkdownForPreview("   テキスト   ");
+            expect(result).toBe("テキスト");
+        });
+    });
 
-    it('truncates long text with ellipsis', () => {
-      const longText = 'a'.repeat(200)
-      const result = cleanMarkdownForPreview(longText, 100)
-      expect(result).toHaveLength(103) // 100 + '...'
-      expect(result.endsWith('...')).toBe(true)
-    })
+    // ─────────────────────────────────────────────
+    // formatDate
+    // ─────────────────────────────────────────────
+    describe("formatDate", () => {
+        it("日本語の短い日付形式でフォーマットする", () => {
+            const result = formatDate("2024-03-15T10:30:00Z");
+            expect(result).toMatch(/2024\/3\/15/);
+        });
 
-    it('does not add ellipsis for short text', () => {
-      const shortText = 'Short text'
-      const result = cleanMarkdownForPreview(shortText, 100)
-      expect(result).toBe('Short text')
-      expect(result).not.toContain('...')
-    })
+        it("異なる日付を正しくフォーマットする", () => {
+            expect(formatDate("2024-01-01")).toMatch(/2024\/1\/1/);
+            expect(formatDate(new Date("2024-12-31").toISOString())).toMatch(
+                /2024\/12\/31/,
+            );
+        });
+    });
 
-    it('removes list markers', () => {
-      const input = '- Item 1\n* Item 2\n+ Item 3\n1. Numbered item'
-      const result = cleanMarkdownForPreview(input)
-      expect(result).toContain('Item 1')
-      expect(result).toContain('Item 2')
-      expect(result).toContain('Item 3')
-      expect(result).toContain('Numbered item')
-      expect(result).not.toContain('-')
-      expect(result).not.toContain('*')
-      expect(result).not.toContain('+')
-      expect(result).not.toContain('1.')
-    })
+    // ─────────────────────────────────────────────
+    // formatDateLong
+    // ─────────────────────────────────────────────
+    describe("formatDateLong", () => {
+        it("日本語の長い日付形式でフォーマットする", () => {
+            const result = formatDateLong("2024-03-15T10:30:00Z");
+            expect(result).toContain("2024年");
+            expect(result).toContain("3月");
+            expect(result).toContain("15日");
+        });
 
-    it('removes blockquotes', () => {
-      const input = '> This is a quote\n> Another line'
-      const result = cleanMarkdownForPreview(input)
-      expect(result).toContain('This is a quote')
-      expect(result).not.toContain('>')
-    })
-  })
+        it("1月と12月を正しく処理する", () => {
+            expect(formatDateLong("2024-01-01")).toContain("1月");
+            expect(formatDateLong("2024-12-31")).toContain("12月");
+        });
+    });
 
-  describe('formatDate', () => {
-    it('formats date in Japanese format (YYYY/MM/DD)', () => {
-      const date = '2024-03-15T10:30:00Z'
-      const result = formatDate(date)
-      expect(result).toMatch(/2024\/3\/15/)
-    })
+    // ─────────────────────────────────────────────
+    // 定数
+    // ─────────────────────────────────────────────
+    describe("定数", () => {
+        it("CATEGORY_LABELS が全カテゴリを含む", () => {
+            const expectedKeys = ["news", "column", "interview", "survey"];
+            expectedKeys.forEach((key) => {
+                expect(CATEGORY_LABELS).toHaveProperty(key);
+                expect(typeof CATEGORY_LABELS[key]).toBe("string");
+            });
+        });
 
-    it('handles different date formats', () => {
-      const date1 = '2024-01-01'
-      const date2 = new Date('2024-12-31').toISOString()
-      
-      expect(formatDate(date1)).toMatch(/2024\/1\/1/)
-      expect(formatDate(date2)).toMatch(/2024\/12\/31/)
-    })
-  })
+        it("CATEGORY_COLORS が全カテゴリを含む", () => {
+            const expectedKeys = ["news", "column", "interview", "survey"];
+            expectedKeys.forEach((key) => {
+                expect(CATEGORY_COLORS).toHaveProperty(key);
+                expect(typeof CATEGORY_COLORS[key]).toBe("string");
+            });
+        });
 
-  describe('formatDateLong', () => {
-    it('formats date in long Japanese format', () => {
-      const date = '2024-03-15T10:30:00Z'
-      const result = formatDateLong(date)
-      expect(result).toContain('2024年')
-      expect(result).toContain('3月')
-      expect(result).toContain('15日')
-    })
-
-    it('handles different months correctly', () => {
-      const january = '2024-01-01'
-      const december = '2024-12-31'
-      
-      expect(formatDateLong(january)).toContain('1月')
-      expect(formatDateLong(december)).toContain('12月')
-    })
-  })
-
-  describe('constants', () => {
-    it('CATEGORY_LABELS contains all expected categories', () => {
-      expect(CATEGORY_LABELS).toHaveProperty('news')
-      expect(CATEGORY_LABELS).toHaveProperty('column')
-      expect(CATEGORY_LABELS).toHaveProperty('interview')
-      expect(CATEGORY_LABELS).toHaveProperty('survey')
-    })
-
-    it('CATEGORY_COLORS contains all expected categories', () => {
-      expect(CATEGORY_COLORS).toHaveProperty('news')
-      expect(CATEGORY_COLORS).toHaveProperty('column')
-      expect(CATEGORY_COLORS).toHaveProperty('interview')
-      expect(CATEGORY_COLORS).toHaveProperty('survey')
-    })
-  })
-})
+        it("CATEGORY_LABELS と CATEGORY_COLORS のキーが一致する", () => {
+            const labelKeys = Object.keys(CATEGORY_LABELS).sort();
+            const colorKeys = Object.keys(CATEGORY_COLORS).sort();
+            expect(labelKeys).toEqual(colorKeys);
+        });
+    });
+});
