@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { Post, Category, Status } from "@/types/database";
+import { Category, Status } from "@/types/database";
 
 export async function GET(
     req: NextRequest,
@@ -84,7 +84,7 @@ export async function PUT(
         let body;
         try {
             body = await req.json();
-        } catch (parseError) {
+        } catch (_parseError) {
             return NextResponse.json(
                 { error: "不正なJSONフォーマットです" },
                 { status: 400 },
@@ -162,7 +162,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-    req: NextRequest,
+    _req: NextRequest,
     { params }: { params: Promise<{ id: string }> },
 ) {
     try {
