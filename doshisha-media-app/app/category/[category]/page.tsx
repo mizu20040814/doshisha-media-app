@@ -22,7 +22,7 @@ async function getCategoryPosts(category: string): Promise<CategoryPost[]> {
             }/api/public-posts/category/${category}`,
             {
                 cache: "no-store",
-            }
+            },
         );
 
         if (!res.ok) {
@@ -53,6 +53,11 @@ function isValidCategory(category: string): category is Category {
     return validCategories.includes(category as Category);
 }
 
+async function CategoryPostGridLoader({ category }: { category: string }) {
+    const posts = await getCategoryPosts(category);
+    return <CategoryPostGrid posts={posts} />;
+}
+
 export default async function CategoryPage({ params }: PageProps) {
     const { category } = await params;
 
@@ -61,7 +66,6 @@ export default async function CategoryPage({ params }: PageProps) {
         notFound();
     }
 
-    const posts = await getCategoryPosts(category);
     const categoryLabel = getCategoryLabel(category);
 
     return (
@@ -100,7 +104,7 @@ export default async function CategoryPage({ params }: PageProps) {
                         </div>
                     }
                 >
-                    <CategoryPostGrid posts={posts} />
+                    <CategoryPostGridLoader category={category} />
                 </Suspense>
             </main>
 

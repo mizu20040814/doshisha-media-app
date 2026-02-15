@@ -17,10 +17,10 @@ type Post = {
 async function getPublishedPosts(): Promise<Post[]> {
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL || 'http://localhost:3000'}/api/public-posts`,
+            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL || "http://localhost:3000"}/api/public-posts`,
             {
                 cache: "no-store",
-            }
+            },
         );
 
         if (!res.ok) {
@@ -59,9 +59,12 @@ function PostGrid({ posts }: { posts: Post[] }) {
     );
 }
 
-export default async function HomePage() {
+async function PostGridLoader() {
     const posts = await getPublishedPosts();
+    return <PostGrid posts={posts} />;
+}
 
+export default function HomePage() {
     return (
         <div className="min-h-screen bg-white">
             <Header />
@@ -100,7 +103,7 @@ export default async function HomePage() {
                         </div>
                     }
                 >
-                    <PostGrid posts={posts} />
+                    <PostGridLoader />
                 </Suspense>
 
                 <CategoryCards />

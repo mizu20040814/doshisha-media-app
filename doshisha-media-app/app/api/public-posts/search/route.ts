@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cleanMarkdownForPreview } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
         // LIKEワイルドカード文字をエスケープ
         const sanitizedQuery = query.trim().replace(/[%_\\]/g, "\\$&");
 
+        const supabase = createSupabaseServerClient();
         let dbQuery = supabase
             .from("posts")
             .select("id, title, content, category, published_at, created_at")
