@@ -17,15 +17,18 @@ export async function GET(req: NextRequest) {
         if (query.length > queryLengthLimit) {
             return NextResponse.json(
                 { error: "検索クエリが長すぎます" },
-                { status: 400 }
+                { status: 400 },
             );
         }
+
+        // LIKEワイルドカード文字をエスケープ
+        const sanitizedQuery = query.trim().replace(/[%_\\]/g, "\\$&");
 
         let dbQuery = supabase
             .from("posts")
             .select("id, title, content, category, published_at, created_at")
             .eq("status", "published")
-            .ilike("title", `%${query.trim()}%`)
+            .ilike("title", `%${sanitizedQuery}%`)
             .order("published_at", { ascending: false });
 
         if (limit && parseInt(limit) > 0) {
@@ -40,7 +43,7 @@ export async function GET(req: NextRequest) {
             console.error("Supabase Error :", error);
             return NextResponse.json(
                 { error: "記事の取得に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -54,7 +57,7 @@ export async function GET(req: NextRequest) {
         console.error("API Error :", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
