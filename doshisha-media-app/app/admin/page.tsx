@@ -5,21 +5,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getCategoryLabel, getCategoryColor } from "@/lib/utils";
-
-type Post = {
-    id: string;
-    title: string;
-    category: string;
-    status: "draft" | "published";
-    published_at: string | null;
-    created_at: string;
-    updated_at: string;
-};
+import { AdminPost } from "@/types/database";
 
 export default function AdminDashboard() {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<AdminPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -46,7 +37,7 @@ export default function AdminDashboard() {
             setError(
                 err instanceof Error
                     ? err.message
-                    : "不明なエラーが発生しました"
+                    : "不明なエラーが発生しました",
             );
         } finally {
             setLoading(false);
@@ -68,7 +59,7 @@ export default function AdminDashboard() {
             alert(
                 err instanceof Error
                     ? err.message
-                    : "削除中にエラーが発生しました"
+                    : "削除中にエラーが発生しました",
             );
         }
     };
@@ -82,7 +73,6 @@ export default function AdminDashboard() {
             minute: "2-digit",
         });
     };
-
 
     const getStatusBadge = (status: string) => {
         if (status === "published") {
@@ -183,8 +173,16 @@ export default function AdminDashboard() {
                 {error && (
                     <div className="mb-6 bg-red-50 border-l-4 border-red-400 p-4">
                         <div className="flex">
-                            <svg className="w-5 h-5 text-red-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            <svg
+                                className="w-5 h-5 text-red-400 mr-2 mt-0.5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clipRule="evenodd"
+                                />
                             </svg>
                             <p className="text-red-700 font-medium">{error}</p>
                         </div>
@@ -221,11 +219,25 @@ export default function AdminDashboard() {
                                             className="px-6 py-16 text-center"
                                         >
                                             <div className="flex flex-col items-center">
-                                                <svg className="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                <svg
+                                                    className="w-12 h-12 text-gray-400 mb-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={1}
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                    />
                                                 </svg>
-                                                <p className="text-gray-500 font-medium">記事がありません</p>
-                                                <p className="text-gray-400 text-sm mt-1">新規記事を作成して始めましょう</p>
+                                                <p className="text-gray-500 font-medium">
+                                                    記事がありません
+                                                </p>
+                                                <p className="text-gray-400 text-sm mt-1">
+                                                    新規記事を作成して始めましょう
+                                                </p>
                                             </div>
                                         </td>
                                     </tr>
@@ -243,10 +255,12 @@ export default function AdminDashboard() {
                                             <td className="px-6 py-4">
                                                 <span
                                                     className={`inline-flex items-center px-2.5 py-0.5 border text-xs font-medium ${getCategoryColor(
-                                                        post.category
+                                                        post.category,
                                                     )}`}
                                                 >
-                                                    {getCategoryLabel(post.category)}
+                                                    {getCategoryLabel(
+                                                        post.category,
+                                                    )}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
@@ -278,7 +292,9 @@ export default function AdminDashboard() {
                                                     </Link>
                                                     <button
                                                         onClick={() =>
-                                                            handleDelete(post.id)
+                                                            handleDelete(
+                                                                post.id,
+                                                            )
                                                         }
                                                         className="text-red-600 hover:text-red-700 p-2 hover:bg-red-50 transition-colors"
                                                         title="削除"

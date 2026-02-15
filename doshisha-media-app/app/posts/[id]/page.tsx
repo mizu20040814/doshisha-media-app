@@ -7,28 +7,25 @@ import Footer from "@/components/Footer";
 import RelatedPosts from "@/components/RelatedPosts";
 import ScrollProgress from "@/components/ScrollProgress";
 import ScrollToTop from "@/components/ScrollToTop";
-import { getCategoryLabel, getCategoryColor, formatDateLong, cleanMarkdownForPreview } from "@/lib/utils";
-
-type Post = {
-    id: string;
-    title: string;
-    content: string;
-    category: string;
-    published_at: string;
-    created_at: string;
-};
+import {
+    getCategoryLabel,
+    getCategoryColor,
+    formatDateLong,
+    cleanMarkdownForPreview,
+} from "@/lib/utils";
+import { PostDetail } from "@/types/database";
 
 type PageProps = {
     params: Promise<{ id: string }>;
 };
 
-async function getPost(id: string): Promise<Post | null> {
+async function getPost(id: string): Promise<PostDetail | null> {
     try {
         const res = await fetch(
             `${
                 process.env.NEXT_PUBLIC_NEXTAUTH_URL || "http://localhost:3000"
             }/api/public-posts/${id}`,
-            { cache: "no-store" }
+            { cache: "no-store" },
         );
 
         if (res.status === 404) {
@@ -46,8 +43,7 @@ async function getPost(id: string): Promise<Post | null> {
     }
 }
 
-function PostContent({ post }: { post: Post }) {
-
+function PostContent({ post }: { post: PostDetail }) {
     return (
         <article className="max-w-4xl mx-auto">
             {/* パンくずナビ */}
@@ -77,7 +73,7 @@ function PostContent({ post }: { post: Post }) {
                 <div className="flex items-center gap-4 mb-4">
                     <span
                         className={`inline-flex items-center px-3 py-1 border text-sm font-medium ${getCategoryColor(
-                            post.category
+                            post.category,
                         )}`}
                     >
                         {getCategoryLabel(post.category)}
@@ -162,7 +158,7 @@ export async function generateMetadata({ params }: PageProps) {
     }
 
     const description = cleanMarkdownForPreview(post.content);
-    
+
     return {
         title: `${post.title} | 同志社メディア`,
         description,

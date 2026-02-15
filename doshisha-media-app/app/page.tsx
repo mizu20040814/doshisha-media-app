@@ -5,22 +5,15 @@ import PostCard from "@/components/PostCard";
 import CategoryCards from "@/components/CategoryCards";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
+import { PostPreview } from "@/types/database";
 
-type Post = {
-    id: string;
-    title: string;
-    preview: string;
-    category: string;
-    published_at: string;
-};
-
-async function getPublishedPosts(): Promise<Post[]> {
+async function getPublishedPosts(): Promise<PostPreview[]> {
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL || 'http://localhost:3000'}/api/public-posts`,
+            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL || "http://localhost:3000"}/api/public-posts`,
             {
                 cache: "no-store",
-            }
+            },
         );
 
         if (!res.ok) {
@@ -34,7 +27,7 @@ async function getPublishedPosts(): Promise<Post[]> {
     }
 }
 
-function PostGrid({ posts }: { posts: Post[] }) {
+function PostGrid({ posts }: { posts: PostPreview[] }) {
     if (posts.length === 0) {
         return (
             <div className="text-center py-12">

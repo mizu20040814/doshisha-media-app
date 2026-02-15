@@ -3,18 +3,10 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
-import { Category } from "@/types/database";
+import { Category, PostPreview } from "@/types/database";
 import { getCategoryLabel } from "@/lib/utils";
 
-type CategoryPost = {
-    id: string;
-    title: string;
-    preview: string;
-    category: Category;
-    published_at: string;
-};
-
-async function getCategoryPosts(category: string): Promise<CategoryPost[]> {
+async function getCategoryPosts(category: string): Promise<PostPreview[]> {
     try {
         const res = await fetch(
             `${
@@ -22,7 +14,7 @@ async function getCategoryPosts(category: string): Promise<CategoryPost[]> {
             }/api/public-posts/category/${category}`,
             {
                 cache: "no-store",
-            }
+            },
         );
 
         if (!res.ok) {
@@ -109,7 +101,7 @@ export default async function CategoryPage({ params }: PageProps) {
     );
 }
 
-function CategoryPostGrid({ posts }: { posts: CategoryPost[] }) {
+function CategoryPostGrid({ posts }: { posts: PostPreview[] }) {
     if (posts.length === 0) {
         return (
             <div className="text-center py-12">
