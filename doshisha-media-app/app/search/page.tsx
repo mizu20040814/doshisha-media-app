@@ -2,20 +2,16 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/PostCard";
-
-type SearchPost = {
-    id: string;
-    title: string;
-    preview: string;
-    category: string;
-    published_at: string;
-};
+import { PostPreview } from "@/types/database";
 
 type PageProps = {
     searchParams: Promise<{ q?: string; limit?: string }>;
 };
 
-async function getSearchResults(query: string, limit?: string): Promise<SearchPost[]> {
+async function getSearchResults(
+    query: string,
+    limit?: string,
+): Promise<PostPreview[]> {
     try {
         const params = new URLSearchParams();
         params.set("q", query);
@@ -25,7 +21,7 @@ async function getSearchResults(query: string, limit?: string): Promise<SearchPo
             `${process.env.NEXT_PUBLIC_NEXTAUTH_URL || "http://localhost:3000"}/api/public-posts/search?${params.toString()}`,
             {
                 cache: "no-store",
-            }
+            },
         );
 
         if (!res.ok) {
@@ -39,7 +35,13 @@ async function getSearchResults(query: string, limit?: string): Promise<SearchPo
     }
 }
 
-function SearchResults({ posts, query }: { posts: SearchPost[]; query: string }) {
+function SearchResults({
+    posts,
+    query,
+}: {
+    posts: PostPreview[];
+    query: string;
+}) {
     if (posts.length === 0) {
         return (
             <div className="text-center py-12">
@@ -57,7 +59,9 @@ function SearchResults({ posts, query }: { posts: SearchPost[]; query: string })
         <div>
             <div className="mb-6">
                 <p className="text-gray-600">
-                    「<span className="font-semibold text-gray-900">{query}</span>」の検索結果: {posts.length}件
+                    「
+                    <span className="font-semibold text-gray-900">{query}</span>
+                    」の検索結果: {posts.length}件
                 </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -109,9 +113,13 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
 export async function generateMetadata({ searchParams }: PageProps) {
     const { q: query } = await searchParams;
-    
+
     return {
-        title: query ? `「${query}」の検索結果 | 同志社メディア` : "検索結果 | 同志社メディア",
-        description: query ? `「${query}」に関する記事の検索結果です。` : "記事の検索結果です。",
+        title: query
+            ? `「${query}」の検索結果 | 同志社メディア`
+            : "検索結果 | 同志社メディア",
+        description: query
+            ? `「${query}」に関する記事の検索結果です。`
+            : "記事の検索結果です。",
     };
 }
