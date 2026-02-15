@@ -8,7 +8,7 @@ import { getCategoryLabel, getCategoryColor, formatDate } from "@/lib/utils";
 import { AdminPost } from "@/types/database";
 
 export default function AdminDashboard() {
-    const { status } = useSession();
+    const { data: session, status } = useSession();
     const router = useRouter();
     const [posts, setPosts] = useState<AdminPost[]>([]);
     const [loading, setLoading] = useState(true);

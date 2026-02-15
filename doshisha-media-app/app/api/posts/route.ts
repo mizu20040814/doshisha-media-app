@@ -4,7 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Category, Status } from "@/types/database";
 
-export async function GET(_req: NextRequest) {
+export async function GET(req: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
 
