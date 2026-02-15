@@ -26,7 +26,7 @@ export default function EditPostPage() {
     const [loading, setLoading] = useState(true); // 初期値true（データ取得中）
     const [saving, setSaving] = useState(false); // 保存中の状態
     const [error, setError] = useState<string | null>(null);
-
+    
     // 元のデータを保持（placeholder用）
     const [originalData, setOriginalData] = useState<{
         title: string;
@@ -35,7 +35,7 @@ export default function EditPostPage() {
         status: string;
     } | null>(null);
 
-    const { status: authStatus } = useSession();
+    const { data: session, status: authStatus } = useSession();
     const router = useRouter();
 
     useEffect(() => {
@@ -59,15 +59,15 @@ export default function EditPostPage() {
                 }
 
                 const data = await response.json();
-
+                
                 // 元のデータを保存
                 setOriginalData({
                     title: data.title || "",
                     content: data.content || "",
                     category: data.category || "news",
-                    status: data.status || "draft",
+                    status: data.status || "draft"
                 });
-
+                
                 // 取得したデータをフォームにセット
                 setTitle(data.title || "");
                 setContent(data.content || "");
@@ -77,7 +77,7 @@ export default function EditPostPage() {
                 setError(
                     error instanceof Error
                         ? error.message
-                        : "エラーが発生しました",
+                        : "エラーが発生しました"
                 );
             } finally {
                 setLoading(false);
@@ -122,7 +122,7 @@ export default function EditPostPage() {
             setError(
                 error instanceof Error
                     ? error.message
-                    : "予期しないエラーが発生しました",
+                    : "予期しないエラーが発生しました"
             );
         } finally {
             setSaving(false);
@@ -201,11 +201,7 @@ export default function EditPostPage() {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-doshisha-purple-400 focus:border-doshisha-purple-400"
-                            placeholder={
-                                originalData
-                                    ? `元のタイトル: ${originalData.title}`
-                                    : "記事のタイトルを入力"
-                            }
+                            placeholder={originalData ? `元のタイトル: ${originalData.title}` : "記事のタイトルを入力"}
                         />
                     </div>
                     {/* Category */}
@@ -215,9 +211,7 @@ export default function EditPostPage() {
                         </label>
                         <select
                             value={category}
-                            onChange={(e) =>
-                                setCategory(e.target.value as Category)
-                            }
+                            onChange={(e) => setCategory(e.target.value as Category)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-doshisha-purple-400 focus:border-doshisha-purple-400"
                         >
                             <option value="news">ニュース</option>
@@ -239,7 +233,7 @@ export default function EditPostPage() {
                                 height={400}
                                 data-color-mode="light"
                                 previewOptions={{
-                                    className: "markdown-content",
+                                    className: "markdown-content"
                                 }}
                             />
                         </div>
@@ -259,7 +253,7 @@ export default function EditPostPage() {
                                         setStatus(
                                             e.target.value as
                                                 | "draft"
-                                                | "published",
+                                                | "published"
                                         )
                                     }
                                     className="mr-2 text-doshisha-purple-600 focus:ring-doshisha-purple-400"
@@ -275,7 +269,7 @@ export default function EditPostPage() {
                                         setStatus(
                                             e.target.value as
                                                 | "draft"
-                                                | "published",
+                                                | "published"
                                         )
                                     }
                                     className="mr-2 text-doshisha-purple-600 focus:ring-doshisha-purple-400"
