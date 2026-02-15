@@ -4,8 +4,6 @@ import { getCategoryLabel } from "@/lib/utils";
 const categories = ["news", "column", "interview", "survey"] as const;
 
 export default function Footer() {
-    const currentYear = new Date().getFullYear();
-
     return (
         <footer className="bg-gray-900 text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -18,6 +16,10 @@ export default function Footer() {
                         <p className="text-gray-400 text-sm leading-relaxed">
                             同志社大学の学生生活に関する最新情報をお届けする
                             学生向けウェブメディアです。
+                        </p>
+                        <p className="text-gray-500 text-xs mt-4">
+                            &copy; {new Date().getFullYear()} Doshisha Media.
+                            All rights reserved.
                         </p>
                     </div>
 
@@ -41,9 +43,7 @@ export default function Footer() {
 
                     {/* SNSリンク・お問い合わせ */}
                     <div>
-                        <h4 className="text-lg font-semibold mb-4">
-                            フォロー
-                        </h4>
+                        <h4 className="text-lg font-semibold mb-4">フォロー</h4>
                         <div className="flex space-x-4">
                             {/* Twitter/X */}
                             {/* <a
