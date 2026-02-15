@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getCategoryLabel, getCategoryColor } from "@/lib/utils";
+import { getCategoryLabel, getCategoryColor, formatDate } from "@/lib/utils";
 import { AdminPost } from "@/types/database";
 
 export default function AdminDashboard() {
@@ -62,16 +62,6 @@ export default function AdminDashboard() {
                     : "削除中にエラーが発生しました",
             );
         }
-    };
-
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("ja-JP", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
     };
 
     const getStatusBadge = (status: string) => {
