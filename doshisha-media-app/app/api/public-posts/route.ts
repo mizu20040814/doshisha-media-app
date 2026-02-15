@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { cleanMarkdownForPreview } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
         const limit = searchParams.get("limit");
 
         // 基本クエリ（公開記事のみ）
+        const supabase = createSupabaseServerClient();
         let query = supabase
             .from("posts")
             .select("id, title, content, category, published_at, created_at")
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
             console.error("Supabase Error :", error);
             return NextResponse.json(
                 { error: "記事の取得に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -47,7 +48,7 @@ export async function GET(req: NextRequest) {
         console.error("API Error :", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

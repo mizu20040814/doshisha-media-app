@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Category, Status } from "@/types/database";
 
 export async function GET(req: NextRequest) {
@@ -11,10 +11,11 @@ export async function GET(req: NextRequest) {
         if (!session) {
             return NextResponse.json(
                 { error: "認証が必要です" },
-                { status: 401 }
+                { status: 401 },
             );
         }
 
+        const supabase = createSupabaseServerClient();
         const { data: posts, error } = await supabase
             .from("posts")
             .select("*")
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
             console.error("Supabase Error:", error);
             return NextResponse.json(
                 { error: "記事の取得に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
         console.error("API GET Error:", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
         if (!session) {
             return NextResponse.json(
                 { error: "認証が必要です" },
-                { status: 401 }
+                { status: 401 },
             );
         }
 
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
         if (!title || !content || !category) {
             return NextResponse.json(
                 { error: "タイトル、内容、カテゴリは必須です" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -79,6 +80,7 @@ export async function POST(req: NextRequest) {
             postData.published_at = new Date().toISOString();
         }
 
+        const supabase = createSupabaseServerClient();
         const { data, error } = await supabase
             .from("posts")
             .insert(postData)
@@ -89,7 +91,7 @@ export async function POST(req: NextRequest) {
             console.error("Supabase Error:", error);
             return NextResponse.json(
                 { error: "記事の作成に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -98,7 +100,7 @@ export async function POST(req: NextRequest) {
         console.error("API POST Error:", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

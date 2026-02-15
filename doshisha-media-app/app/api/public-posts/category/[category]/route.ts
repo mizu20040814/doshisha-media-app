@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Category } from "@/types/database";
 import { cleanMarkdownForPreview } from "@/lib/utils";
 
@@ -13,7 +13,7 @@ type CategoryPostResponse = {
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: Promise<{ category: string }> }
+    { params }: { params: Promise<{ category: string }> },
 ) {
     try {
         const { category } = await params;
@@ -28,11 +28,12 @@ export async function GET(
         if (!validCategories.includes(category as Category)) {
             return NextResponse.json(
                 { error: "無効なカテゴリです" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
         // supabaseから公開記事を取得（既存のpublic-posts APIと同様の構造）
+        const supabase = createSupabaseServerClient();
         const { data: posts, error } = await supabase
             .from("posts")
             .select("id, title, content, category, published_at, created_at")
@@ -44,7 +45,7 @@ export async function GET(
             console.error("Supabase error:", error);
             return NextResponse.json(
                 { error: "記事の取得に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -59,12 +60,11 @@ export async function GET(
             })) || [];
 
         return NextResponse.json(formattedPosts);
-        
     } catch (error) {
         console.error("Category API error:", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { Post, Category, Status } from "@/types/database";
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: Promise<{ id: string }> },
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -14,7 +14,7 @@ export async function GET(
         if (!session) {
             return NextResponse.json(
                 { error: "認証が必要です" },
-                { status: 401 }
+                { status: 401 },
             );
         }
 
@@ -23,10 +23,11 @@ export async function GET(
         if (!id) {
             return NextResponse.json(
                 { error: "記事IDが必要です" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
+        const supabase = createSupabaseServerClient();
         const { data: post, error } = await supabase
             .from("posts")
             .select("*")
@@ -37,13 +38,13 @@ export async function GET(
             if (error.code === "PGRST116") {
                 return NextResponse.json(
                     { error: "記事が見つかりません" },
-                    { status: 404 }
+                    { status: 404 },
                 );
             }
             console.error("Supabase Error:", error);
             return NextResponse.json(
                 { error: "記事の取得に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -52,14 +53,14 @@ export async function GET(
         console.error("Unexpected error in GET /api/posts/[id]:", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
 
 export async function PUT(
     req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: Promise<{ id: string }> },
 ) {
     try {
         const session = await getServerSession(authOptions);
@@ -67,7 +68,7 @@ export async function PUT(
         if (!session) {
             return NextResponse.json(
                 { error: "認証が必要です" },
-                { status: 401 }
+                { status: 401 },
             );
         }
 
@@ -76,7 +77,7 @@ export async function PUT(
         if (!id) {
             return NextResponse.json(
                 { error: "記事IDが必要です" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -86,7 +87,7 @@ export async function PUT(
         } catch (parseError) {
             return NextResponse.json(
                 { error: "不正なJSONフォーマットです" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -96,7 +97,7 @@ export async function PUT(
         if (!title || !content || !category) {
             return NextResponse.json(
                 { error: "タイトル、内容、カテゴリは必須です" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -114,6 +115,7 @@ export async function PUT(
             status: (status || "draft") as Status,
             updated_at: new Date().toISOString(),
         };
+        const supabase = createSupabaseServerClient();
         if (status === "published") {
             const { data: currentPost } = await supabase
                 .from("posts")
@@ -139,13 +141,13 @@ export async function PUT(
             if (error.code === "PGRST116") {
                 return NextResponse.json(
                     { error: "更新対象の記事が見つかりません" },
-                    { status: 404 }
+                    { status: 404 },
                 );
             }
             console.error("Update Error:", error);
             return NextResponse.json(
                 { error: "記事の更新に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
@@ -154,21 +156,21 @@ export async function PUT(
         console.error("Unexpected error in PUT /api/posts/[id]:", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: Promise<{ id: string }> },
 ) {
     try {
         const session = await getServerSession(authOptions);
         if (!session) {
             return NextResponse.json(
                 { error: "認証が必要です" },
-                { status: 401 }
+                { status: 401 },
             );
         }
 
@@ -177,10 +179,11 @@ export async function DELETE(
         if (!id) {
             return NextResponse.json(
                 { error: "記事IDが必要です" },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
+        const supabase = createSupabaseServerClient();
         const { data: existingPost } = await supabase
             .from("posts")
             .select("id")
@@ -190,32 +193,29 @@ export async function DELETE(
         if (!existingPost) {
             return NextResponse.json(
                 { error: "削除対象の記事が見つかりません" },
-                { status: 404 }
+                { status: 404 },
             );
         }
 
-        const { error } = await supabase
-            .from("posts")
-            .delete()
-            .eq("id", id);
+        const { error } = await supabase.from("posts").delete().eq("id", id);
 
         if (error) {
             console.error("Delete Error:", error);
             return NextResponse.json(
                 { error: "記事の削除に失敗しました" },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
         return NextResponse.json(
             { message: "記事を削除しました" },
-            { status: 200 }
+            { status: 200 },
         );
     } catch (error) {
         console.error("Unexpected error in DELETE /api/posts/[id]:", error);
         return NextResponse.json(
             { error: "サーバーエラーが発生しました" },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
