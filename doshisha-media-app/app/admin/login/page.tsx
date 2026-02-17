@@ -25,17 +25,17 @@ function LoginForm() {
                 redirect: false,
             });
 
-            if (result?.error) {
-                setError("ユーザー名またはパスワードが正しくありません");
-            } else if (result?.ok) {
-                window.location.href = callbackUrl;
-            }
-        } catch (_error) {
-            setError("ログイン中にエラーが発生しました");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      if (result?.error) {
+        setError('ユーザー名またはパスワードが正しくありません')
+      } else if (result?.ok) {
+        window.location.href = callbackUrl
+      }
+    } catch (_error) {
+      setError('ログイン中にエラーが発生しました')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-white">
