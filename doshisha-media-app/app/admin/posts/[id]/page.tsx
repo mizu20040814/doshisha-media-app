@@ -35,7 +35,7 @@ export default function EditPostPage() {
         status: string;
     } | null>(null);
 
-    const { data: session, status: authStatus } = useSession();
+    const { status: authStatus } = useSession();
     const router = useRouter();
 
     useEffect(() => {

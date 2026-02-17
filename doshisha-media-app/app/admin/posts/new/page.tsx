@@ -22,7 +22,7 @@ export default function NewPostPage() {
     const [error, setError] = useState<string | null>(null);
 
     // 認証チェック
-    const { data: session, status: authStatus } = useSession();
+    const { status: authStatus } = useSession();
     const router = useRouter();
 
     useEffect(() => {

@@ -30,7 +30,7 @@ function LoginForm() {
       } else if (result?.ok) {
         window.location.href = callbackUrl
       }
-    } catch (error) {
+    } catch (_error) {
       setError('ログイン中にエラーが発生しました')
     } finally {
       setIsLoading(false)
